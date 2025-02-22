@@ -70,6 +70,117 @@
       </nav>
     </header>
 
+    <main class="mx-auto h-[85dvh] max-w-7xl px-6 py-6 md:px-12">
+      <div
+        class="flex h-full w-full flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-4 md:gap-6"
+      >
+        <div
+          class="board-container flex aspect-square h-full max-w-sm min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+        >
+          <div
+            class="flex flex-shrink-0 items-center justify-between bg-sky-300 p-3 text-gray-700 dark:bg-sky-400 dark:text-gray-800"
+          >
+            <h3 class="text-sm font-semibold md:text-base">To Do</h3>
+            <div class="flex space-x-1">
+              <button
+                class="edit-board-btn rounded p-1 text-gray-700 transition-colors hover:bg-white/20 dark:text-gray-800"
+              >
+                <i class="fas fa-pencil-alt text-sm"></i>
+              </button>
+              <button
+                class="delete-board-btn rounded p-1 text-gray-700 transition-colors hover:bg-white/20 dark:text-gray-800"
+              >
+                <i class="fas fa-trash text-sm"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-4 dark:bg-gray-700"
+          ></div>
+
+          <div class="flex-shrink-0 p-3">
+            <button
+              class="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-sky-300 bg-gray-50 px-4 py-2 text-sky-600 transition-all hover:border-solid hover:bg-sky-50 hover:text-sky-700 dark:border-sky-400 dark:bg-gray-700 dark:text-sky-300 dark:hover:bg-sky-900/30 dark:hover:text-sky-200"
+            >
+              <i class="fas fa-plus text-sm"></i>
+              Add Task
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="board-container flex aspect-square h-full max-w-sm min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+        >
+          <div
+            class="flex flex-shrink-0 items-center justify-between bg-amber-200 p-3 text-gray-700 dark:bg-amber-300 dark:text-gray-800"
+          >
+            <h3 class="text-sm font-semibold md:text-base">In Progress</h3>
+            <div class="flex space-x-1">
+              <button
+                class="edit-board-btn rounded p-1 text-gray-700 transition-colors hover:bg-white/20 dark:text-gray-800"
+              >
+                <i class="fas fa-pencil-alt text-sm"></i>
+              </button>
+              <button
+                class="delete-board-btn rounded p-1 text-gray-700 transition-colors hover:bg-white/20 dark:text-gray-800"
+              >
+                <i class="fas fa-trash text-sm"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-3 dark:bg-gray-700"
+          ></div>
+
+          <div class="flex-shrink-0 p-3">
+            <button
+              class="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-amber-300 bg-gray-50 px-4 py-2 text-amber-600 transition-all hover:border-solid hover:bg-amber-50 hover:text-amber-700 dark:border-amber-400 dark:bg-gray-700 dark:text-amber-300 dark:hover:bg-amber-900/30 dark:hover:text-amber-200"
+            >
+              <i class="fas fa-plus text-sm"></i>
+              Add Task
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="board-container flex aspect-square h-full max-w-sm min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+        >
+          <div
+            class="flex flex-shrink-0 items-center justify-between bg-green-200 p-3 text-gray-700 dark:bg-green-300 dark:text-gray-800"
+          >
+            <h3 class="text-sm font-semibold md:text-base">Done</h3>
+            <div class="flex space-x-1">
+              <button
+                class="edit-board-btn rounded p-1 text-gray-700 transition-colors hover:bg-white/20 dark:text-gray-800"
+              >
+                <i class="fas fa-pencil-alt text-sm"></i>
+              </button>
+              <button
+                class="delete-board-btn rounded p-1 text-gray-700 transition-colors hover:bg-white/20 dark:text-gray-800"
+              >
+                <i class="fas fa-trash text-sm"></i>
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-3 dark:bg-gray-700"
+          ></div>
+
+          <div class="flex-shrink-0 p-4">
+            <button
+              class="flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-green-300 bg-gray-50 px-4 py-2 text-green-600 transition-all hover:border-solid hover:bg-green-50 hover:text-green-700 dark:border-green-400 dark:bg-gray-700 dark:text-green-300 dark:hover:bg-green-900/30 dark:hover:text-green-200"
+            >
+              <i class="fas fa-plus text-sm"></i>
+              Add Task
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+
     <script src="/js/script.js"></script>
   </body>
 </html>
