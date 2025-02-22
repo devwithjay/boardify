@@ -3,11 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="./assets/favicon.svg" type="image/x-icon" />
+    <link rel="shortcut icon" href="./assets/favicon.svg" />
     <link rel="stylesheet" href="./css/style.css" />
     <title>Boardify</title>
   </head>
-  <body>
-    <script type="module" src="/src/main.js"></script>
+  <body class="bg-white dark:bg-gray-900 transition-colors duration-300">
+    <header class="w-full px-6 md:px-12 py-4 mx-auto max-w-7xl">
+      <nav class="flex flex-wrap justify-between items-center">
+        <span
+          class="text-gray-800 dark:text-white text-lg md:text-xl tracking-wider"
+        >
+          Developed By
+          <a
+            href="https://devwithjay.com"
+            class="font-medium hover:underline animate-pulse transition-opacity duration-300 hover:opacity-80"
+          >
+            Jay
+          </a>
+        </span>
+
+        <button
+          id="theme-toggle"
+          aria-label="Toggle dark mode"
+          class="text-gray-800 dark:text-gray-300 p-2 rounded-lg transition-all duration-300 hover:scale-110"
+        >
+          <svg
+            id="sun-icon"
+            class="w-6 h-6 hidden dark:block"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <circle cx="12" cy="12" r="5"></circle>
+            <path
+              d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+            ></path>
+          </svg>
+          <svg
+            id="moon-icon"
+            class="w-6 h-6 dark:hidden"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"></path>
+          </svg>
+        </button>
+      </nav>
+    </header>
+
+    <script type="module" src="/js/script.js"></script>
   </body>
 </html>
