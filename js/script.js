@@ -50,10 +50,27 @@ document.addEventListener('DOMContentLoaded', () => {
   );
 
   let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  let editingTaskId = null;
 
-  const openTaskModal = index => {
+  const openTaskModal = (index, task = null) => {
     taskForm.dataset.targetColumn = index;
-    taskForm.reset();
+
+    if (task) {
+      editingTaskId = task.id;
+      document.getElementById('task-title').value = task.title;
+      document.getElementById('task-description').value =
+        task.description || '';
+      document.getElementById('task-priority').value = task.priority;
+      document.getElementById('task-due-date').value = task.dueDate || '';
+      document.getElementById('task-assignee').value = task.assignee || '';
+
+      document.querySelector('#task-modal h3').textContent = 'Edit Task';
+    } else {
+      editingTaskId = null;
+      taskForm.reset();
+      document.querySelector('#task-modal h3').textContent = 'Add New Task';
+    }
+
     taskModal.classList.remove('hidden');
     taskModal.classList.add('flex');
   };
@@ -89,10 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const validPriorities = ['low', 'medium', 'high'];
-    const taskPriority = validPriorities.includes(priority) ? priority : 'low';
-
-    addTask(title, description, taskPriority, dueDate, assignee, columnIndex);
+    if (editingTaskId) {
+      updateTask(
+        editingTaskId,
+        title,
+        description,
+        priority,
+        dueDate,
+        assignee,
+      );
+    } else {
+      addTask(title, description, priority, dueDate, assignee, columnIndex);
+    }
 
     taskModal.classList.add('hidden');
     taskModal.classList.remove('flex');
@@ -117,6 +142,32 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     tasks.push(newTask);
+    saveTasks();
+  };
+
+  const updateTask = (
+    taskId,
+    title,
+    description,
+    priority,
+    dueDate,
+    assignee,
+  ) => {
+    const taskIndex = tasks.findIndex(task => task.id === taskId);
+    if (taskIndex !== -1) {
+      tasks[taskIndex] = {
+        ...tasks[taskIndex],
+        title,
+        description,
+        priority,
+        dueDate,
+        assignee,
+      };
+      saveTasks();
+    }
+  };
+
+  const saveTasks = () => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
     renderAllTasks();
   };
@@ -141,36 +192,41 @@ document.addEventListener('DOMContentLoaded', () => {
     taskElement.dataset.taskId = task.id;
 
     taskElement.innerHTML = `
-    <div class="flex justify-between items-start mb-3">
-      <h4 class="font-medium text-gray-900 dark:text-white text-lg">${task.title}</h4>
-      <span class="flex items-center justify-center text-sm px-3 py-1 rounded-md ${
-        task.priority === 'high'
-          ? 'bg-red-300 dark:bg-red-500 text-gray-800 dark:text-white rounded-md'
-          : task.priority === 'medium'
-            ? 'bg-amber-300 dark:bg-amber-500 text-gray-800 dark:text-white rounded-md'
-            : 'bg-green-300 dark:bg-green-500 text-gray-800 dark:text-white rounded-md'
-      }">
-        ${task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'Low'}
-      </span>
-    </div>
-    <p class="text-gray-600 dark:text-gray-400 text-sm break-words line-clamp-3 mb-4">
-      ${task.description || 'No description'}
-    </p>
-    ${task.dueDate ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Due: ${task.dueDate}</p>` : ''}
-    ${task.assignee ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Assignee: ${task.assignee}</p>` : ''}
+      <div class="flex justify-between items-start mb-3">
+        <h4 class="font-medium text-gray-900 dark:text-white text-lg">${task.title}</h4>
+        <span class="flex items-center justify-center text-sm px-3 py-1 rounded-md ${
+          task.priority === 'high'
+            ? 'bg-red-300 dark:bg-rose-500 text-gray-800 dark:text-white'
+            : task.priority === 'medium'
+              ? 'bg-amber-300 dark:bg-amber-500 text-gray-800 dark:text-white'
+              : 'bg-green-300 dark:bg-green-500 text-gray-800 dark:text-white'
+        }">
+          ${task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'Low'}
+        </span>
+      </div>
+      <p class="text-gray-600 dark:text-gray-400 text-sm break-words line-clamp-3 mb-4">
+        ${task.description || 'No description'}
+      </p>
+      ${task.dueDate ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Due: ${task.dueDate}</p>` : ''}
+      ${task.assignee ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Assignee: ${task.assignee}</p>` : ''}
 
-    <!-- Edit & Delete Buttons with Improved Spacing -->
-    <div class="flex justify-end space-x-2 mt-4">
-      <button class="edit-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300">
-        <i class="fas fa-pencil-alt text-sm"></i>
-      </button>
-      <button class="delete-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300">
-        <i class="fas fa-trash text-sm"></i>
-      </button>
-    </div>
-  `;
+      <div class="flex justify-end space-x-2 mt-4">
+        <button class="edit-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300" data-task-id="${task.id}">
+          <i class="fas fa-pencil-alt text-sm"></i>
+        </button>
+        <button class="delete-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300" data-task-id="${task.id}">
+          <i class="fas fa-trash text-sm"></i>
+        </button>
+      </div>
+    `;
 
     targetColumn.appendChild(taskElement);
+
+    taskElement
+      .querySelector('.edit-task-btn')
+      .addEventListener('click', () => {
+        openTaskModal(task.column, task);
+      });
   };
 
   renderAllTasks();
