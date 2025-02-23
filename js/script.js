@@ -227,6 +227,25 @@ document.addEventListener('DOMContentLoaded', () => {
       .addEventListener('click', () => {
         openTaskModal(task.column, task);
       });
+
+    taskElement
+      .querySelector('.delete-task-btn')
+      .addEventListener('click', () => {
+        deleteTask(task.id);
+      });
+  };
+
+  const deleteTask = taskId => {
+    const confirmDelete = confirm('Are you sure you want to delete this task?');
+
+    if (!confirmDelete) return;
+
+    const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+    if (taskIndex !== -1) {
+      tasks.splice(taskIndex, 1);
+      saveTasks();
+    }
   };
 
   renderAllTasks();
