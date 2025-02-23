@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h4 class="font-medium text-gray-900 dark:text-white text-lg">${task.title}</h4>
         <span class="flex items-center justify-center text-sm px-3 py-1 rounded-md ${
           task.priority === 'high'
-            ? 'bg-red-300 dark:bg-rose-500 text-gray-800 dark:text-white'
+            ? 'bg-rose-300 dark:bg-rose-500 text-gray-800 dark:text-white'
             : task.priority === 'medium'
               ? 'bg-amber-300 dark:bg-amber-500 text-gray-800 dark:text-white'
               : 'bg-green-300 dark:bg-green-500 text-gray-800 dark:text-white'

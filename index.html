@@ -191,6 +191,7 @@
     >
       <div
         class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800"
+        id="modal-content"
       >
         <div
           class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
@@ -199,6 +200,7 @@
             Add New Task
           </h3>
           <button
+            id="close-modal"
             class="cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
           >
             &times;
@@ -219,6 +221,7 @@
                 required
               />
             </div>
+
             <div class="mb-4">
               <label
                 for="task-description"
@@ -228,9 +231,10 @@
               <textarea
                 id="task-description"
                 rows="3"
-                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+                class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
               ></textarea>
             </div>
+
             <div class="mb-4">
               <label
                 for="task-priority"
@@ -246,6 +250,7 @@
                 <option value="high">High</option>
               </select>
             </div>
+
             <div class="mb-4">
               <label
                 for="task-due-date"
@@ -258,6 +263,7 @@
                 class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
               />
             </div>
+
             <div class="mb-4">
               <label
                 for="task-assignee"
@@ -270,16 +276,18 @@
                 class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
               />
             </div>
+
             <div class="mt-6 flex justify-end space-x-4">
               <button
                 type="button"
+                id="cancel-modal"
                 class="cursor-pointer rounded-md bg-gray-200 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                class="cursor-pointer rounded-md bg-gradient-to-r from-indigo-600 to-violet-500 px-4 py-2 text-white transition-colors hover:from-indigo-700 hover:to-violet-600 dark:from-indigo-700 dark:to-violet-600 dark:hover:from-indigo-800 dark:hover:to-violet-700"
+                class="cursor-pointer rounded-md bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
               >
                 Save Task
               </button>
