@@ -82,7 +82,7 @@
           class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
         >
           <div
-            class="flex flex-shrink-0 items-center justify-between bg-sky-300 p-3 text-gray-700 dark:bg-sky-400 dark:text-gray-800"
+            class="flex flex-shrink-0 items-center justify-between bg-sky-200 p-3 text-gray-700 dark:bg-sky-300 dark:text-gray-800"
           >
             <h3 class="text-sm font-semibold md:text-base">To Do</h3>
             <div class="flex space-x-1">
@@ -105,7 +105,7 @@
 
           <div class="flex-shrink-0 p-3">
             <button
-              class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-sky-300 bg-gray-50 px-4 py-2 text-sky-600 transition-all hover:border-solid hover:bg-sky-50 hover:text-sky-700 dark:border-sky-400 dark:bg-gray-700 dark:text-sky-300 dark:hover:bg-sky-900/30 dark:hover:text-sky-200"
+              class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-sky-300 bg-gray-50 px-4 py-2 text-sky-600 transition-all hover:border-solid hover:bg-sky-50 hover:text-sky-700 dark:border-sky-400 dark:bg-gray-700 dark:text-sky-300 dark:hover:bg-sky-900/30 dark:hover:text-sky-200"
             >
               <i class="fas fa-plus text-sm"></i>
               Add Task
@@ -140,7 +140,7 @@
 
           <div class="flex-shrink-0 p-3">
             <button
-              class="flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-amber-300 bg-gray-50 px-4 py-2 text-amber-600 transition-all hover:border-solid hover:bg-amber-50 hover:text-amber-700 dark:border-amber-400 dark:bg-gray-700 dark:text-amber-300 dark:hover:bg-amber-900/30 dark:hover:text-amber-200"
+              class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-amber-300 bg-gray-50 px-4 py-2 text-amber-600 transition-all hover:border-solid hover:bg-amber-50 hover:text-amber-700 dark:border-amber-400 dark:bg-gray-700 dark:text-amber-300 dark:hover:bg-amber-900/30 dark:hover:text-amber-200"
             >
               <i class="fas fa-plus text-sm"></i>
               Add Task
@@ -184,6 +184,110 @@
         </div>
       </div>
     </main>
+
+    <div
+      id="task-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
+    >
+      <div
+        class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800"
+      >
+        <div
+          class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
+        >
+          <h3 class="font-medium text-gray-900 dark:text-white">
+            Add New Task
+          </h3>
+          <button
+            class="cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="p-4">
+          <form id="task-form">
+            <div class="mb-4">
+              <label
+                for="task-title"
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Title</label
+              >
+              <input
+                type="text"
+                id="task-title"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="task-description"
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Description</label
+              >
+              <textarea
+                id="task-description"
+                rows="3"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+              ></textarea>
+            </div>
+            <div class="mb-4">
+              <label
+                for="task-priority"
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Priority</label
+              >
+              <select
+                id="task-priority"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label
+                for="task-due-date"
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Due Date</label
+              >
+              <input
+                type="date"
+                id="task-due-date"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                for="task-assignee"
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Assignee</label
+              >
+              <input
+                type="text"
+                id="task-assignee"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+              />
+            </div>
+            <div class="mt-6 flex justify-end space-x-4">
+              <button
+                type="button"
+                class="cursor-pointer rounded-md bg-gray-200 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="cursor-pointer rounded-md bg-gradient-to-r from-indigo-600 to-violet-500 px-4 py-2 text-white transition-colors hover:from-indigo-700 hover:to-violet-600 dark:from-indigo-700 dark:to-violet-600 dark:hover:from-indigo-800 dark:hover:to-violet-700"
+              >
+                Save Task
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
     <footer class="fixed right-0 bottom-0 z-10 flex justify-end p-4 md:p-8">
       <a

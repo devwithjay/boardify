@@ -41,4 +41,137 @@ document.addEventListener('DOMContentLoaded', () => {
     .addEventListener('click', toggleTheme);
 
   initTheme();
+
+  const taskModal = document.getElementById('task-modal');
+  const taskForm = document.getElementById('task-form');
+  const addTaskButtons = document.querySelectorAll('.add-task-btn');
+  const closeModalButtons = document.querySelectorAll(
+    '#task-modal button:not([type="submit"])',
+  );
+
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+  const openTaskModal = index => {
+    taskForm.dataset.targetColumn = index;
+    taskForm.reset();
+    taskModal.classList.remove('hidden');
+    taskModal.classList.add('flex');
+  };
+
+  addTaskButtons.forEach((button, index) => {
+    button.addEventListener('click', event => {
+      event.preventDefault();
+      openTaskModal(index);
+    });
+  });
+
+  closeModalButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      taskModal.classList.add('hidden');
+      taskModal.classList.remove('flex');
+    });
+  });
+
+  taskForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const title = document.getElementById('task-title').value.trim();
+    const description = document
+      .getElementById('task-description')
+      .value.trim();
+    const priority = document.getElementById('task-priority').value;
+    const dueDate = document.getElementById('task-due-date').value;
+    const assignee = document.getElementById('task-assignee').value.trim();
+    const columnIndex = parseInt(taskForm.dataset.targetColumn);
+
+    if (!title) {
+      alert('Task title cannot be empty.');
+      return;
+    }
+
+    const validPriorities = ['low', 'medium', 'high'];
+    const taskPriority = validPriorities.includes(priority) ? priority : 'low';
+
+    addTask(title, description, taskPriority, dueDate, assignee, columnIndex);
+
+    taskModal.classList.add('hidden');
+    taskModal.classList.remove('flex');
+  });
+
+  const addTask = (
+    title,
+    description,
+    priority,
+    dueDate,
+    assignee,
+    columnIndex,
+  ) => {
+    const newTask = {
+      id: Date.now().toString(),
+      title,
+      description,
+      priority,
+      dueDate,
+      assignee,
+      column: columnIndex,
+    };
+
+    tasks.push(newTask);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderAllTasks();
+  };
+
+  const renderAllTasks = () => {
+    const taskLists = document.querySelectorAll('.task-list');
+    taskLists.forEach(list => (list.innerHTML = ''));
+
+    tasks.forEach(task => {
+      const columnIndex = task.column;
+      if (columnIndex >= 0 && columnIndex < taskLists.length) {
+        renderTask(task, taskLists[columnIndex]);
+      }
+    });
+  };
+
+  const renderTask = (task, targetColumn) => {
+    const taskElement = document.createElement('div');
+    taskElement.className =
+      'task bg-white dark:bg-gray-800 rounded-md shadow-lg p-4 mt-1 flex flex-col hover:shadow-xl transition-shadow relative';
+
+    taskElement.dataset.taskId = task.id;
+
+    taskElement.innerHTML = `
+    <div class="flex justify-between items-start mb-3">
+      <h4 class="font-medium text-gray-900 dark:text-white text-lg">${task.title}</h4>
+      <span class="flex items-center justify-center text-sm px-3 py-1 rounded-md ${
+        task.priority === 'high'
+          ? 'bg-red-300 dark:bg-red-500 text-gray-800 dark:text-white rounded-md'
+          : task.priority === 'medium'
+            ? 'bg-amber-300 dark:bg-amber-500 text-gray-800 dark:text-white rounded-md'
+            : 'bg-green-300 dark:bg-green-500 text-gray-800 dark:text-white rounded-md'
+      }">
+        ${task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'Low'}
+      </span>
+    </div>
+    <p class="text-gray-600 dark:text-gray-400 text-sm break-words line-clamp-3 mb-4">
+      ${task.description || 'No description'}
+    </p>
+    ${task.dueDate ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Due: ${task.dueDate}</p>` : ''}
+    ${task.assignee ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Assignee: ${task.assignee}</p>` : ''}
+
+    <!-- Edit & Delete Buttons with Improved Spacing -->
+    <div class="flex justify-end space-x-2 mt-4">
+      <button class="edit-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300">
+        <i class="fas fa-pencil-alt text-sm"></i>
+      </button>
+      <button class="delete-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300">
+        <i class="fas fa-trash text-sm"></i>
+      </button>
+    </div>
+  `;
+
+    targetColumn.appendChild(taskElement);
+  };
+
+  renderAllTasks();
 });
