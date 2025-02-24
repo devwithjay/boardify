@@ -354,3 +354,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderAllTasks();
 });
+
+document.addEventListener('dragover', e => {
+  e.preventDefault();
+  autoScrollOnDrag(e);
+});
+
+const autoScrollOnDrag = event => {
+  const scrollContainer = document.querySelector('main > div');
+  const scrollSpeed = 50;
+  const edgeThreshold = 100;
+
+  const {clientX} = event;
+  const {left, right} = scrollContainer.getBoundingClientRect();
+
+  if (clientX < left + edgeThreshold) {
+    scrollContainer.scrollBy({left: -scrollSpeed, behavior: 'smooth'});
+  } else if (clientX > right - edgeThreshold) {
+    scrollContainer.scrollBy({left: scrollSpeed, behavior: 'smooth'});
+  }
+};
