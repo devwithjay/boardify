@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+  const taskPlaceholder = document.createElement('div');
+  taskPlaceholder.className =
+    'task-placeholder border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-md p-4 bg-gray-50 dark:bg-gray-700';
+
   const toggleTheme = () => {
     const htmlElement = document.documentElement;
     const isDarkMode = htmlElement.classList.contains('dark');
@@ -190,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'task bg-white dark:bg-gray-800 rounded-md shadow-lg p-4 mt-1 flex flex-col hover:shadow-xl transition-shadow relative';
 
     taskElement.dataset.taskId = task.id;
+    taskElement.draggable = true;
 
     taskElement.innerHTML = `
       <div class="flex justify-between items-start mb-3">
@@ -222,6 +227,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     targetColumn.appendChild(taskElement);
 
+    taskElement.addEventListener('dragstart', e => {
+      taskElement.classList.add('dragging');
+
+      e.dataTransfer.setData('text/plain', taskElement.dataset.taskId);
+
+      const taskClone = taskElement.cloneNode(true);
+      taskClone.style.width = `${taskElement.offsetWidth}px`;
+      taskClone.style.height = `${taskElement.offsetHeight}px`;
+      taskClone.style.opacity = '1';
+      taskClone.style.position = 'absolute';
+      taskClone.style.pointerEvents = 'none';
+      taskClone.style.zIndex = '1000';
+      taskClone.classList.add('task-clone');
+
+      document.body.appendChild(taskClone);
+
+      e.dataTransfer.setDragImage(
+        taskClone,
+        taskElement.offsetWidth / 2,
+        taskElement.offsetHeight / 2,
+      );
+
+      setTimeout(() => {
+        taskElement.classList.add('invisible');
+      }, 0);
+    });
+
+    taskElement.addEventListener('dragend', () => {
+      taskElement.classList.remove('dragging', 'invisible');
+      document.querySelectorAll('.task-clone').forEach(clone => clone.remove());
+    });
+
     taskElement
       .querySelector('.edit-task-btn')
       .addEventListener('click', () => {
@@ -246,6 +283,73 @@ document.addEventListener('DOMContentLoaded', () => {
       tasks.splice(taskIndex, 1);
       saveTasks();
     }
+  };
+
+  document.querySelectorAll('.task-list').forEach(column => {
+    column.addEventListener('dragover', e => {
+      e.preventDefault();
+
+      const taskElement = document.querySelector('.dragging');
+      if (!taskElement) return;
+
+      taskPlaceholder.style.height = `${taskElement.offsetHeight}px`;
+      taskPlaceholder.style.width = `${taskElement.offsetWidth}px`;
+
+      const afterElement = getDragAfterElement(column, e.clientY);
+
+      if (!afterElement) {
+        column.appendChild(taskPlaceholder);
+      } else {
+        afterElement.parentNode.insertBefore(taskPlaceholder, afterElement);
+      }
+    });
+
+    column.addEventListener('drop', e => {
+      e.preventDefault();
+      const taskId = e.dataTransfer.getData('text/plain');
+      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+
+      if (taskElement) {
+        const afterElement = getDragAfterElement(column, e.clientY);
+        if (!afterElement) {
+          column.appendChild(taskElement);
+        } else {
+          afterElement.parentNode.insertBefore(taskElement, afterElement);
+        }
+
+        taskPlaceholder.remove();
+        taskElement.classList.remove('hidden', 'dragging');
+
+        const taskIndex = tasks.findIndex(task => task.id === taskId);
+        if (taskIndex !== -1) {
+          const newColumnIndex = Array.from(
+            document.querySelectorAll('.task-list'),
+          ).indexOf(column);
+          tasks[taskIndex].column = newColumnIndex;
+          saveTasks();
+        }
+      }
+    });
+  });
+
+  const getDragAfterElement = (container, y) => {
+    const draggableElements = [
+      ...container.querySelectorAll('.task:not(.dragging)'),
+    ];
+
+    return draggableElements.reduce(
+      (closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+
+        if (offset < 0 && offset > closest.offset) {
+          return {offset: offset, element: child};
+        } else {
+          return closest;
+        }
+      },
+      {offset: Number.NEGATIVE_INFINITY},
+    ).element;
   };
 
   renderAllTasks();
