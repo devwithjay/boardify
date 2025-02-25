@@ -98,6 +98,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     attachEditBoardEventListeners();
     attachAddTaskEventListeners();
+    attachDeleteBoardEventListeners();
+  };
+
+  const attachDeleteBoardEventListeners = () => {
+    document.querySelectorAll('.delete-board-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const boardIndex = parseInt(btn.dataset.index);
+        deleteBoard(boardIndex);
+      });
+    });
   };
 
   const attachEditBoardEventListeners = () => {
@@ -154,6 +164,30 @@ document.addEventListener('DOMContentLoaded', () => {
       clearBoard();
     }
   });
+
+  const deleteBoard = index => {
+    const confirmDelete = confirm(
+      'Are you sure you want to delete this board? This action cannot be undone.',
+    );
+
+    if (confirmDelete) {
+      boards.splice(index, 1);
+      saveBoards();
+
+      tasks = tasks.filter(task => task.column !== index);
+
+      tasks.forEach(task => {
+        if (task.column > index) {
+          task.column -= 1;
+        }
+      });
+
+      saveTasks();
+
+      renderBoards();
+      renderAllTasks();
+    }
+  };
 
   const clearBoard = () => {
     if (currentBoardIndex !== null) {
