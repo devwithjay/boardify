@@ -61,8 +61,33 @@ document.addEventListener('DOMContentLoaded', () => {
     {title: 'Done', color: '#86efac'},
   ];
 
+  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
   const saveBoards = () =>
     localStorage.setItem('boards', JSON.stringify(boards));
+
+  const saveTasks = () => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    renderAllTasks();
+  };
+
+  const addNewBoard = () => {
+    const boardTitle = prompt('Enter the name of the new board:');
+
+    if (!boardTitle || boardTitle.trim() === '') {
+      alert('Board name cannot be empty.');
+      return;
+    }
+
+    const newBoard = {
+      title: boardTitle.trim(),
+      color: '#9CA3AF',
+    };
+
+    boards.push(newBoard);
+    saveBoards();
+    renderBoards();
+  };
 
   const renderBoards = () => {
     const boardsContainer = document.querySelector('main div.flex.flex-nowrap');
@@ -77,50 +102,121 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="background:${board.color}" class="text-gray-700 dark:text-gray-800 p-3 flex justify-between items-center flex-shrink-0">
           <h3 class="font-semibold text-sm md:text-base">${board.title}</h3>
           <div class="flex space-x-1">
-            <button class="edit-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors">
+            <button class="edit-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors" data-index="${index}">
               <i class="fas fa-pencil-alt text-sm"></i>
             </button>
-            <button class="delete-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors">
+            <button class="delete-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors" data-index="${index}">
               <i class="fas fa-trash text-sm"></i>
             </button>
           </div>
         </div>
-        <div class="task-list bg-gray-50 dark:bg-gray-700 flex-grow p-3 overflow-y-auto space-y-3 h-full"></div>
+        <div class="task-list bg-gray-50 dark:bg-gray-700 flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
         <div class="flex-shrink-0 p-4">
-          <button class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600  transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200">
+          <button class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200" data-index="${index}">
             <i class="fas fa-plus text-sm"></i> Add Task
-        </button>
+          </button>
         </div>
       `;
 
       boardsContainer.appendChild(boardElement);
     });
 
-    attachEditBoardEventListeners();
-    attachAddTaskEventListeners();
-    attachDeleteBoardEventListeners();
+    const addBoardButton = document.createElement('button');
+    addBoardButton.id = 'add-new-board-btn';
+    addBoardButton.className =
+      'flex h-full min-w-[320px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300';
+    addBoardButton.innerHTML = `
+        <i class="fas fa-plus fa-2x mb-2"></i>
+        <span class="font-medium">Add New Board</span>
+    `;
+    addBoardButton.addEventListener('click', addNewBoard);
+    boardsContainer.appendChild(addBoardButton);
+
+    attachEventListeners();
+    renderAllTasks();
   };
 
-  const attachDeleteBoardEventListeners = () => {
-    document.querySelectorAll('.delete-board-btn').forEach(btn => {
+  const attachEventListeners = () => {
+    document.querySelectorAll('.edit-board-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const boardIndex = parseInt(btn.dataset.index);
-        deleteBoard(boardIndex);
+        const index = parseInt(btn.dataset.index);
+        openEditBoardModal(index);
       });
     });
-  };
 
-  const attachEditBoardEventListeners = () => {
-    document.querySelectorAll('.edit-board-btn').forEach((btn, index) => {
-      btn.onclick = () => openEditBoardModal(index);
+    document.querySelectorAll('.delete-board-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        deleteBoard(index);
+      });
     });
-  };
 
-  const attachAddTaskEventListeners = () => {
-    document.querySelectorAll('.add-task-btn').forEach((button, index) => {
+    document.querySelectorAll('.add-task-btn').forEach(button => {
       button.addEventListener('click', event => {
         event.preventDefault();
+        const index = parseInt(button.dataset.index);
         openTaskModal(index);
+      });
+    });
+
+    document.querySelectorAll('.task-list').forEach(column => {
+      column.addEventListener('dragover', e => {
+        e.preventDefault();
+
+        const taskElement = document.querySelector('.dragging');
+        if (!taskElement) return;
+
+        taskPlaceholder.style.height = `${taskElement.offsetHeight}px`;
+        taskPlaceholder.style.width = `${taskElement.offsetWidth}px`;
+
+        const afterElement = getDragAfterElement(column, e.clientY);
+
+        document
+          .querySelectorAll('.task-placeholder')
+          .forEach(el => el.remove());
+
+        if (!afterElement) {
+          column.appendChild(taskPlaceholder);
+        } else {
+          column.insertBefore(taskPlaceholder, afterElement);
+        }
+      });
+
+      column.addEventListener('dragleave', e => {
+        if (e.currentTarget === e.target && !column.contains(e.relatedTarget)) {
+          document
+            .querySelectorAll('.task-placeholder')
+            .forEach(el => el.remove());
+        }
+      });
+
+      column.addEventListener('drop', e => {
+        e.preventDefault();
+        const taskId = e.dataTransfer.getData('text/plain');
+        const taskElement = document.querySelector(
+          `[data-task-id="${taskId}"]`,
+        );
+
+        if (taskElement) {
+          const afterElement = getDragAfterElement(column, e.clientY);
+          if (!afterElement) {
+            column.appendChild(taskElement);
+          } else {
+            column.insertBefore(taskElement, afterElement);
+          }
+
+          document
+            .querySelectorAll('.task-placeholder')
+            .forEach(el => el.remove());
+          taskElement.classList.remove('invisible', 'dragging');
+
+          const taskIndex = tasks.findIndex(task => task.id === taskId);
+          if (taskIndex !== -1) {
+            const newColumnIndex = parseInt(column.dataset.index);
+            tasks[taskIndex].column = newColumnIndex;
+            saveTasks();
+          }
+        }
       });
     });
   };
@@ -170,23 +266,23 @@ document.addEventListener('DOMContentLoaded', () => {
       'Are you sure you want to delete this board? This action cannot be undone.',
     );
 
-    if (confirmDelete) {
-      boards.splice(index, 1);
-      saveBoards();
+    if (!confirmDelete) return;
 
-      tasks = tasks.filter(task => task.column !== index);
+    boards.splice(index, 1);
+    saveBoards();
 
-      tasks.forEach(task => {
-        if (task.column > index) {
-          task.column -= 1;
-        }
-      });
+    tasks = tasks.filter(task => task.column !== index);
 
-      saveTasks();
+    tasks.forEach(task => {
+      if (task.column > index) {
+        task.column -= 1;
+      }
+    });
 
-      renderBoards();
-      renderAllTasks();
-    }
+    saveTasks();
+
+    renderBoards();
+    renderAllTasks();
   };
 
   const clearBoard = () => {
@@ -202,16 +298,16 @@ document.addEventListener('DOMContentLoaded', () => {
   closeEditBoardModal.addEventListener('click', hideEditBoardModal);
   cancelEditBoard.addEventListener('click', hideEditBoardModal);
 
-  renderBoards();
+  document
+    .getElementById('add-new-board-btn')
+    ?.addEventListener('click', addNewBoard);
 
   const taskModal = document.getElementById('task-modal');
   const taskForm = document.getElementById('task-form');
-  const addTaskButtons = document.querySelectorAll('.add-task-btn');
   const closeModalButtons = document.querySelectorAll(
     '#task-modal button:not([type="submit"])',
   );
 
-  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
   let editingTaskId = null;
 
   const openTaskModal = (index, task = null) => {
@@ -236,13 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
     taskModal.classList.remove('hidden');
     taskModal.classList.add('flex');
   };
-
-  addTaskButtons.forEach((button, index) => {
-    button.addEventListener('click', event => {
-      event.preventDefault();
-      openTaskModal(index);
-    });
-  });
 
   closeModalButtons.forEach(button => {
     button.addEventListener('click', () => {
@@ -327,11 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       saveTasks();
     }
-  };
-
-  const saveTasks = () => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    renderAllTasks();
   };
 
   const renderAllTasks = () => {
@@ -425,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       document.querySelectorAll('.task-clone').forEach(clone => clone.remove());
+      document.querySelectorAll('.task-placeholder').forEach(el => el.remove());
     });
 
     taskElement
@@ -453,53 +538,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  document.querySelectorAll('.task-list').forEach(column => {
-    column.addEventListener('dragover', e => {
-      e.preventDefault();
-
-      const taskElement = document.querySelector('.dragging');
-      if (!taskElement) return;
-
-      taskPlaceholder.style.height = `${taskElement.offsetHeight}px`;
-      taskPlaceholder.style.width = `${taskElement.offsetWidth}px`;
-
-      const afterElement = getDragAfterElement(column, e.clientY);
-
-      if (!afterElement) {
-        column.appendChild(taskPlaceholder);
-      } else {
-        afterElement.parentNode.insertBefore(taskPlaceholder, afterElement);
-      }
-    });
-
-    column.addEventListener('drop', e => {
-      e.preventDefault();
-      const taskId = e.dataTransfer.getData('text/plain');
-      const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-
-      if (taskElement) {
-        const afterElement = getDragAfterElement(column, e.clientY);
-        if (!afterElement) {
-          column.appendChild(taskElement);
-        } else {
-          afterElement.parentNode.insertBefore(taskElement, afterElement);
-        }
-
-        taskPlaceholder.remove();
-        taskElement.classList.remove('hidden', 'dragging');
-
-        const taskIndex = tasks.findIndex(task => task.id === taskId);
-        if (taskIndex !== -1) {
-          const newColumnIndex = Array.from(
-            document.querySelectorAll('.task-list'),
-          ).indexOf(column);
-          tasks[taskIndex].column = newColumnIndex;
-          saveTasks();
-        }
-      }
-    });
-  });
-
   const getDragAfterElement = (container, y) => {
     const draggableElements = [
       ...container.querySelectorAll('.task:not(.dragging)'),
@@ -520,25 +558,25 @@ document.addEventListener('DOMContentLoaded', () => {
     ).element;
   };
 
-  renderAllTasks();
+  document.addEventListener('dragover', e => {
+    e.preventDefault();
+    autoScrollOnDrag(e);
+  });
+
+  const autoScrollOnDrag = event => {
+    const scrollContainer = document.querySelector('main > div');
+    const scrollSpeed = 50;
+    const edgeThreshold = 100;
+
+    const {clientX} = event;
+    const {left, right} = scrollContainer.getBoundingClientRect();
+
+    if (clientX < left + edgeThreshold) {
+      scrollContainer.scrollBy({left: -scrollSpeed, behavior: 'smooth'});
+    } else if (clientX > right - edgeThreshold) {
+      scrollContainer.scrollBy({left: scrollSpeed, behavior: 'smooth'});
+    }
+  };
+
+  renderBoards();
 });
-
-document.addEventListener('dragover', e => {
-  e.preventDefault();
-  autoScrollOnDrag(e);
-});
-
-const autoScrollOnDrag = event => {
-  const scrollContainer = document.querySelector('main > div');
-  const scrollSpeed = 50;
-  const edgeThreshold = 100;
-
-  const {clientX} = event;
-  const {left, right} = scrollContainer.getBoundingClientRect();
-
-  if (clientX < left + edgeThreshold) {
-    scrollContainer.scrollBy({left: -scrollSpeed, behavior: 'smooth'});
-  } else if (clientX > right - edgeThreshold) {
-    scrollContainer.scrollBy({left: scrollSpeed, behavior: 'smooth'});
-  }
-};
