@@ -297,6 +297,78 @@
       </div>
     </div>
 
+    <div
+      id="edit-board-modal"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
+    >
+      >
+      <div
+        class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800"
+      >
+        <div
+          class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
+        >
+          <h3 class="font-medium text-gray-900 dark:text-white">Edit Board</h3>
+          <button
+            id="close-edit-board-modal"
+            class="cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            &times;
+          </button>
+        </div>
+        <div class="p-4">
+          <form id="edit-board-form">
+            <div class="mb-4">
+              <label
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Board Name</label
+              >
+              <input
+                id="board-name-input"
+                type="text"
+                class="w-full rounded-md border bg-gray-50 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+              />
+            </div>
+            <div class="mb-4">
+              <label
+                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >Board Color</label
+              >
+              <input
+                id="board-color-input"
+                type="color"
+                class="h-10 w-10 cursor-pointer rounded-md border-0 bg-transparent p-0"
+              />
+            </div>
+            <div class="mt-6 flex items-center justify-between">
+              <button
+                type="button"
+                id="clear-board-btn"
+                class="cursor-pointer rounded bg-red-500 px-3 py-2 text-white transition-colors hover:bg-red-600"
+              >
+                Clear Board
+              </button>
+              <div class="space-x-2">
+                <button
+                  type="button"
+                  id="cancel-edit-board"
+                  class="cursor-pointer rounded bg-gray-200 px-3 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="cursor-pointer rounded bg-indigo-500 px-3 py-2 text-white transition-colors hover:bg-indigo-600"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <footer class="fixed right-0 bottom-0 z-10 flex justify-end p-4 md:p-8">
       <a
         href="https://github.com/devwithjay/boardify"

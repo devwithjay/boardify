@@ -46,6 +46,130 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initTheme();
 
+  const editBoardModal = document.getElementById('edit-board-modal');
+  const closeEditBoardModal = document.getElementById('close-edit-board-modal');
+  const editBoardForm = document.getElementById('edit-board-form');
+  const boardNameInput = document.getElementById('board-name-input');
+  const boardColorInput = document.getElementById('board-color-input');
+  const cancelEditBoard = document.getElementById('cancel-edit-board');
+
+  let currentBoardIndex = null;
+
+  let boards = JSON.parse(localStorage.getItem('boards')) || [
+    {title: 'To Do', color: '#7dd3fc'},
+    {title: 'In Progress', color: '#fde68a'},
+    {title: 'Done', color: '#86efac'},
+  ];
+
+  const saveBoards = () =>
+    localStorage.setItem('boards', JSON.stringify(boards));
+
+  const renderBoards = () => {
+    const boardsContainer = document.querySelector('main div.flex.flex-nowrap');
+    boardsContainer.innerHTML = '';
+
+    boards.forEach((board, index) => {
+      const boardElement = document.createElement('div');
+      boardElement.className =
+        'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col w-[320px] flex-shrink-0 h-full';
+
+      boardElement.innerHTML = `
+        <div style="background:${board.color}" class="text-gray-700 dark:text-gray-800 p-3 flex justify-between items-center flex-shrink-0">
+          <h3 class="font-semibold text-sm md:text-base">${board.title}</h3>
+          <div class="flex space-x-1">
+            <button class="edit-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors">
+              <i class="fas fa-pencil-alt text-sm"></i>
+            </button>
+            <button class="delete-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors">
+              <i class="fas fa-trash text-sm"></i>
+            </button>
+          </div>
+        </div>
+        <div class="task-list bg-gray-50 dark:bg-gray-700 flex-grow p-3 overflow-y-auto space-y-3 h-full"></div>
+        <div class="flex-shrink-0 p-4">
+          <button class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600  transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200">
+            <i class="fas fa-plus text-sm"></i> Add Task
+        </button>
+        </div>
+      `;
+
+      boardsContainer.appendChild(boardElement);
+    });
+
+    attachEditBoardEventListeners();
+    attachAddTaskEventListeners();
+  };
+
+  const attachEditBoardEventListeners = () => {
+    document.querySelectorAll('.edit-board-btn').forEach((btn, index) => {
+      btn.onclick = () => openEditBoardModal(index);
+    });
+  };
+
+  const attachAddTaskEventListeners = () => {
+    document.querySelectorAll('.add-task-btn').forEach((button, index) => {
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        openTaskModal(index);
+      });
+    });
+  };
+
+  const openEditBoardModal = index => {
+    currentBoardIndex = index;
+    boardNameInput.value = boards[index].title;
+    boardColorInput.value = boards[index].color;
+
+    editBoardModal.classList.remove('hidden');
+    editBoardModal.classList.add('flex');
+
+    editBoardForm.onsubmit = e => {
+      e.preventDefault();
+      updateBoard(index);
+    };
+  };
+
+  const hideEditBoardModal = () => {
+    editBoardModal.classList.add('hidden');
+    editBoardModal.classList.remove('flex');
+  };
+
+  const updateBoard = index => {
+    boards[index] = {
+      title: boardNameInput.value,
+      color: boardColorInput.value,
+    };
+    saveBoards();
+    renderBoards();
+    renderAllTasks();
+    hideEditBoardModal();
+  };
+
+  document.getElementById('clear-board-btn').addEventListener('click', () => {
+    const confirmClear = confirm(
+      'Are you sure you want to clear all tasks from this board?',
+    );
+
+    if (confirmClear) {
+      clearBoard();
+    }
+  });
+
+  const clearBoard = () => {
+    if (currentBoardIndex !== null) {
+      tasks = tasks.filter(task => task.column !== currentBoardIndex);
+
+      saveTasks();
+      renderAllTasks();
+      hideEditBoardModal();
+    }
+  };
+
+  closeEditBoardModal.addEventListener('click', hideEditBoardModal);
+  cancelEditBoard.addEventListener('click', hideEditBoardModal);
+
+  renderBoards();
+
   const taskModal = document.getElementById('task-modal');
   const taskForm = document.getElementById('task-form');
   const addTaskButtons = document.querySelectorAll('.add-task-btn');
@@ -213,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ${task.description || 'No description'}
       </p>
       ${task.dueDate ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Due: ${task.dueDate}</p>` : ''}
-      ${task.assignee ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Assignee: ${task.assignee}</p>` : ''}
+      ${task.assignee ? `<p class="text-gray-600 dark:text-gray-400 break-words line-clamp-3 text-sm">Assignee: ${task.assignee}</p>` : ''}
 
       <div class="flex justify-end space-x-2 mt-4">
         <button class="edit-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300" data-task-id="${task.id}">
@@ -227,20 +351,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     targetColumn.appendChild(taskElement);
 
+    let taskClone = null;
+
     taskElement.addEventListener('dragstart', e => {
       taskElement.classList.add('dragging');
 
       e.dataTransfer.setData('text/plain', taskElement.dataset.taskId);
 
-      const taskClone = taskElement.cloneNode(true);
+      taskClone = taskElement.cloneNode(true);
       taskClone.style.width = `${taskElement.offsetWidth}px`;
       taskClone.style.height = `${taskElement.offsetHeight}px`;
-      taskClone.style.opacity = '1';
+      taskClone.style.opacity = '0.3'; // Make it more transparent
       taskClone.style.position = 'absolute';
       taskClone.style.pointerEvents = 'none';
       taskClone.style.zIndex = '1000';
       taskClone.classList.add('task-clone');
 
+      taskClone.style.top = '-9999px';
+      taskClone.style.left = '-9999px';
       document.body.appendChild(taskClone);
 
       e.dataTransfer.setDragImage(
@@ -256,6 +384,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     taskElement.addEventListener('dragend', () => {
       taskElement.classList.remove('dragging', 'invisible');
+
+      if (taskClone) {
+        taskClone.remove();
+        taskClone = null;
+      }
+
       document.querySelectorAll('.task-clone').forEach(clone => clone.remove());
     });
 
