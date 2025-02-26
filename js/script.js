@@ -101,13 +101,21 @@ document.addEventListener('DOMContentLoaded', () => {
       boardElement.innerHTML = `
         <div style="background:${board.color}" class="text-gray-700 dark:text-gray-800 p-3 flex justify-between items-center flex-shrink-0">
           <h3 class="font-semibold text-sm md:text-base">${board.title}</h3>
-          <div class="flex space-x-1">
-            <button class="edit-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors" data-index="${index}">
-              <i class="fas fa-pencil-alt text-sm"></i>
+          <div class="relative">
+            <button class="board-options-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors" data-index="${index}">
+              <i class="fas fa-ellipsis-v text-sm"></i>
             </button>
-            <button class="delete-board-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors" data-index="${index}">
-              <i class="fas fa-trash text-sm"></i>
-            </button>
+            <div class="board-options-menu hidden absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 rounded shadow-lg z-10 w-32 py-1" data-index="${index}">
+              <button class="edit-board-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" data-index="${index}">
+                <i class="fas fa-pencil-alt mr-2"></i> Edit
+              </button>
+              <button class="delete-board-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" data-index="${index}">
+                <i class="fas fa-trash mr-2"></i> Delete
+              </button>
+              <button class="sort-board-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" data-index="${index}">
+                <i class="fas fa-sort mr-2"></i> Sort
+              </button>
+            </div>
           </div>
         </div>
         <div class="task-list bg-gray-50 dark:bg-gray-700 flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
@@ -137,6 +145,28 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const attachEventListeners = () => {
+    document.querySelectorAll('.board-options-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const index = btn.dataset.index;
+        const menu = document.querySelector(
+          `.board-options-menu[data-index="${index}"]`,
+        );
+
+        document.querySelectorAll('.board-options-menu').forEach(m => {
+          if (m !== menu) m.classList.add('hidden');
+        });
+
+        menu.classList.toggle('hidden');
+      });
+    });
+
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.board-options-menu').forEach(menu => {
+        menu.classList.add('hidden');
+      });
+    });
+
     document.querySelectorAll('.edit-board-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const index = parseInt(btn.dataset.index);
@@ -148,6 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', () => {
         const index = parseInt(btn.dataset.index);
         deleteBoard(index);
+      });
+    });
+
+    document.querySelectorAll('.sort-board-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index);
+        showSortOptions(index);
       });
     });
 
@@ -199,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (taskElement) {
           const afterElement = getDragAfterElement(column, e.clientY);
 
-          // Remove placeholder before inserting the task
           document
             .querySelectorAll('.task-placeholder')
             .forEach(el => el.remove());
@@ -216,15 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
           if (taskIndex !== -1) {
             const newColumnIndex = parseInt(column.dataset.index);
 
-            // Update task column
             tasks[taskIndex].column = newColumnIndex;
 
-            // Get new task order
             const updatedTaskList = Array.from(
               column.querySelectorAll('.task'),
             ).map(taskEl => taskEl.dataset.taskId);
 
-            // Reorder the tasks array to reflect the drop position
             const taskToMove = tasks.splice(taskIndex, 1)[0];
 
             let insertIndex = tasks.findIndex(
@@ -245,6 +278,82 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+  };
+
+  const showSortOptions = boardIndex => {
+    const sortOptions = ['priority', 'dueDate', 'title'];
+    const sortDirections = ['asc', 'desc'];
+
+    const sortModal = document.createElement('div');
+    sortModal.className =
+      'fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50';
+    sortModal.innerHTML = `
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Sort Tasks</h3>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sort by</label>
+          <select id="sort-by" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+            <option value="priority">Priority</option>
+            <option value="dueDate">Due Date</option>
+            <option value="title">Title</option>
+          </select>
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Direction</label>
+          <select id="sort-direction" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+        <div class="flex justify-end space-x-3">
+          <button id="cancel-sort" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Cancel</button>
+          <button id="apply-sort" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Apply</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(sortModal);
+
+    document.getElementById('cancel-sort').addEventListener('click', () => {
+      sortModal.remove();
+    });
+
+    document.getElementById('apply-sort').addEventListener('click', () => {
+      const sortBy = document.getElementById('sort-by').value;
+      const direction = document.getElementById('sort-direction').value;
+      sortTasks(boardIndex, sortBy, direction);
+      sortModal.remove();
+    });
+  };
+
+  const sortTasks = (boardIndex, sortBy, direction) => {
+    const boardTasks = tasks.filter(task => task.column === boardIndex);
+
+    boardTasks.sort((a, b) => {
+      let comparison = 0;
+
+      if (sortBy === 'priority') {
+        const priorityValues = {high: 3, medium: 2, low: 1};
+        const priorityA = priorityValues[a.priority] || 0;
+        const priorityB = priorityValues[b.priority] || 0;
+        comparison = priorityA - priorityB;
+      } else if (sortBy === 'dueDate') {
+        if (!a.dueDate && !b.dueDate) comparison = 0;
+        else if (!a.dueDate) comparison = direction === 'asc' ? 1 : -1;
+        else if (!b.dueDate) comparison = direction === 'asc' ? -1 : 1;
+        else comparison = new Date(a.dueDate) - new Date(b.dueDate);
+      } else if (sortBy === 'title') {
+        comparison = a.title.localeCompare(b.title);
+      }
+
+      return direction === 'desc' ? -comparison : comparison;
+    });
+
+    tasks = tasks.filter(task => task.column !== boardIndex);
+
+    tasks = [...tasks, ...boardTasks];
+
+    saveTasks();
   };
 
   const openEditBoardModal = index => {
