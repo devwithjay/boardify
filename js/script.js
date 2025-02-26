@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBoardButton = document.createElement('button');
     addBoardButton.id = 'add-new-board-btn';
     addBoardButton.className =
-      'flex h-full min-w-[320px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300';
+      'flex h-full min-w-[360px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300';
     addBoardButton.innerHTML = `
         <i class="fas fa-plus fa-2x mb-2"></i>
         <span class="font-medium">Add New Board</span>
@@ -163,13 +163,13 @@ document.addEventListener('DOMContentLoaded', () => {
       column.addEventListener('dragover', e => {
         e.preventDefault();
 
-        const taskElement = document.querySelector('.dragging');
-        if (!taskElement) return;
-
-        taskPlaceholder.style.height = `${taskElement.offsetHeight}px`;
-        taskPlaceholder.style.width = `${taskElement.offsetWidth}px`;
+        const draggingTask = document.querySelector('.dragging');
+        if (!draggingTask) return;
 
         const afterElement = getDragAfterElement(column, e.clientY);
+
+        taskPlaceholder.style.height = `${draggingTask.offsetHeight}px`;
+        taskPlaceholder.style.width = `${draggingTask.offsetWidth}px`;
 
         document
           .querySelectorAll('.task-placeholder')
@@ -192,28 +192,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
       column.addEventListener('drop', e => {
         e.preventDefault();
+
         const taskId = e.dataTransfer.getData('text/plain');
-        const taskElement = document.querySelector(
-          `[data-task-id="${taskId}"]`,
-        );
+        const taskElement = document.getElementById(`task-${taskId}`);
 
         if (taskElement) {
           const afterElement = getDragAfterElement(column, e.clientY);
+
+          // Remove placeholder before inserting the task
+          document
+            .querySelectorAll('.task-placeholder')
+            .forEach(el => el.remove());
+
           if (!afterElement) {
             column.appendChild(taskElement);
           } else {
             column.insertBefore(taskElement, afterElement);
           }
 
-          document
-            .querySelectorAll('.task-placeholder')
-            .forEach(el => el.remove());
           taskElement.classList.remove('invisible', 'dragging');
 
           const taskIndex = tasks.findIndex(task => task.id === taskId);
           if (taskIndex !== -1) {
             const newColumnIndex = parseInt(column.dataset.index);
+
+            // Update task column
             tasks[taskIndex].column = newColumnIndex;
+
+            // Get new task order
+            const updatedTaskList = Array.from(
+              column.querySelectorAll('.task'),
+            ).map(taskEl => taskEl.dataset.taskId);
+
+            // Reorder the tasks array to reflect the drop position
+            const taskToMove = tasks.splice(taskIndex, 1)[0];
+
+            let insertIndex = tasks.findIndex(
+              task =>
+                task.column === newColumnIndex &&
+                updatedTaskList.indexOf(task.id) >
+                  updatedTaskList.indexOf(taskId),
+            );
+
+            if (insertIndex === -1) {
+              insertIndex = tasks.length;
+            }
+
+            tasks.splice(insertIndex, 0, taskToMove);
+
             saveTasks();
           }
         }
@@ -430,24 +456,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const getPriorityClass = priority => {
+    switch (priority) {
+      case 'high':
+        return 'bg-rose-300 dark:bg-rose-500 text-gray-800 dark:text-white';
+      case 'medium':
+        return 'bg-amber-300 dark:bg-amber-500 text-gray-800 dark:text-white';
+      default:
+        return 'bg-green-300 dark:bg-green-500 text-gray-800 dark:text-white';
+    }
+  };
+
   const renderTask = (task, targetColumn) => {
     const taskElement = document.createElement('div');
     taskElement.className =
       'task bg-white dark:bg-gray-800 rounded-md shadow-lg p-4 mt-1 flex flex-col hover:shadow-xl transition-shadow relative';
 
+    taskElement.id = `task-${task.id}`;
     taskElement.dataset.taskId = task.id;
     taskElement.draggable = true;
+
+    const priorityClass = getPriorityClass(task.priority);
 
     taskElement.innerHTML = `
       <div class="flex justify-between items-start mb-3">
         <h4 class="font-medium text-gray-900 dark:text-white text-lg">${task.title}</h4>
-        <span class="flex items-center justify-center text-sm px-3 py-1 rounded-md ${
-          task.priority === 'high'
-            ? 'bg-rose-300 dark:bg-rose-500 text-gray-800 dark:text-white'
-            : task.priority === 'medium'
-              ? 'bg-amber-300 dark:bg-amber-500 text-gray-800 dark:text-white'
-              : 'bg-green-300 dark:bg-green-500 text-gray-800 dark:text-white'
-        }">
+        <span class="priority-badge flex items-center justify-center text-sm px-3 py-1 rounded-md ${priorityClass}" data-priority="${task.priority}">
           ${task.priority ? task.priority.charAt(0).toUpperCase() + task.priority.slice(1) : 'Low'}
         </span>
       </div>
@@ -472,28 +506,30 @@ document.addEventListener('DOMContentLoaded', () => {
     let taskClone = null;
 
     taskElement.addEventListener('dragstart', e => {
+      const taskHTML = taskElement.innerHTML;
+      const taskStyle = window.getComputedStyle(taskElement);
+      const taskWidth = taskElement.offsetWidth;
+      const taskHeight = taskElement.offsetHeight;
+
       taskElement.classList.add('dragging');
 
       e.dataTransfer.setData('text/plain', taskElement.dataset.taskId);
 
-      taskClone = taskElement.cloneNode(true);
-      taskClone.style.width = `${taskElement.offsetWidth}px`;
-      taskClone.style.height = `${taskElement.offsetHeight}px`;
-      taskClone.style.opacity = '0.3'; // Make it more transparent
+      taskClone = document.createElement('div');
+      taskClone.className = taskElement.className + ' task-clone';
+      taskClone.innerHTML = taskHTML;
+      taskClone.style.width = `${taskWidth}px`;
+      taskClone.style.height = `${taskHeight}px`;
+      taskClone.style.opacity = '0.3';
       taskClone.style.position = 'absolute';
       taskClone.style.pointerEvents = 'none';
       taskClone.style.zIndex = '1000';
-      taskClone.classList.add('task-clone');
-
       taskClone.style.top = '-9999px';
       taskClone.style.left = '-9999px';
+
       document.body.appendChild(taskClone);
 
-      e.dataTransfer.setDragImage(
-        taskClone,
-        taskElement.offsetWidth / 2,
-        taskElement.offsetHeight / 2,
-      );
+      e.dataTransfer.setDragImage(taskClone, taskWidth / 2, taskHeight / 2);
 
       setTimeout(() => {
         taskElement.classList.add('invisible');
