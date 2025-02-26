@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  let filteredTasks = [...tasks];
 
   const saveBoards = () =>
     localStorage.setItem('boards', JSON.stringify(boards));
@@ -553,7 +554,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const searchTasks = searchTerm => {
+    if (!searchTerm || searchTerm.trim() === '') {
+      filteredTasks = [...tasks];
+    } else {
+      searchTerm = searchTerm.toLowerCase().trim();
+      filteredTasks = tasks.filter(task =>
+        task.title.toLowerCase().includes(searchTerm),
+      );
+    }
+    renderFilteredTasks();
+  };
+
+  const renderFilteredTasks = () => {
+    const taskLists = document.querySelectorAll('.task-list');
+    taskLists.forEach(list => (list.innerHTML = ''));
+
+    filteredTasks.forEach(task => {
+      const columnIndex = task.column;
+      if (columnIndex >= 0 && columnIndex < taskLists.length) {
+        renderTask(task, taskLists[columnIndex]);
+      }
+    });
+  };
+
   const renderAllTasks = () => {
+    filteredTasks = [...tasks];
     const taskLists = document.querySelectorAll('.task-list');
     taskLists.forEach(list => (list.innerHTML = ''));
 
@@ -724,4 +750,50 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   renderBoards();
+
+  const searchIcon = document.getElementById('search-icon');
+  const searchInput = document.getElementById('search-input');
+
+  const toggleSearchBar = () => {
+    const isHidden = searchInput.classList.contains('hidden');
+
+    if (isHidden) {
+      searchInput.classList.remove('hidden');
+      searchInput.classList.add('opacity-100');
+
+      if (window.innerWidth < 640) {
+        searchInput.classList.add('w-40');
+        searchInput.classList.remove('w-48');
+      } else {
+        searchInput.classList.add('w-48');
+        searchInput.classList.remove('w-40');
+      }
+
+      searchInput.focus();
+    } else {
+      searchInput.classList.add('hidden');
+      searchInput.classList.remove('w-40', 'w-48', 'opacity-100');
+    }
+  };
+
+  searchIcon.addEventListener('click', toggleSearchBar);
+
+  document.addEventListener('click', event => {
+    if (event.target === searchIcon) {
+      toggleSearchBar();
+    }
+  });
+
+  searchInput.addEventListener('input', e => {
+    searchTasks(e.target.value);
+  });
+
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      searchInput.classList.add('hidden');
+      searchInput.classList.remove('w-40', 'w-48', 'opacity-100');
+      renderAllTasks();
+    }
+  });
 });
