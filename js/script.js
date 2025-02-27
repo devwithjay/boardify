@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentBoardIndex = null;
 
-  let boards = JSON.parse(localStorage.getItem('boards')) || [
+  const boards = JSON.parse(localStorage.getItem('boards')) || [
     {title: 'To Do', color: '#7dd3fc'},
     {title: 'In Progress', color: '#fde68a'},
     {title: 'Done', color: '#86efac'},
@@ -170,21 +170,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.edit-board-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index);
+        const index = Number.parseInt(btn.dataset.index);
         openEditBoardModal(index);
       });
     });
 
     document.querySelectorAll('.delete-board-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index);
+        const index = Number.parseInt(btn.dataset.index);
         deleteBoard(index);
       });
     });
 
     document.querySelectorAll('.sort-board-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        const index = parseInt(btn.dataset.index);
+        const index = Number.parseInt(btn.dataset.index);
         showSortOptions(index);
       });
     });
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.add-task-btn').forEach(button => {
       button.addEventListener('click', event => {
         event.preventDefault();
-        const index = parseInt(button.dataset.index);
+        const index = Number.parseInt(button.dataset.index);
         openTaskModal(index);
       });
     });
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const taskIndex = tasks.findIndex(task => task.id === taskId);
           if (taskIndex !== -1) {
-            const newColumnIndex = parseInt(column.dataset.index);
+            const newColumnIndex = Number.parseInt(column.dataset.index);
 
             tasks[taskIndex].column = newColumnIndex;
 
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const priority = document.getElementById('task-priority').value;
     const dueDate = document.getElementById('task-due-date').value;
     const assignee = document.getElementById('task-assignee').value.trim();
-    const columnIndex = parseInt(taskForm.dataset.targetColumn);
+    const columnIndex = Number.parseInt(taskForm.dataset.targetColumn);
 
     if (!title) {
       alert('Task title cannot be empty.');
@@ -638,49 +638,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     targetColumn.appendChild(taskElement);
 
-    let taskClone = null;
+    const taskClone = null;
+    let touchStartY = 0;
+    let touchStartX = 0;
 
     taskElement.addEventListener('dragstart', e => {
-      const taskHTML = taskElement.innerHTML;
-      const taskStyle = window.getComputedStyle(taskElement);
-      const taskWidth = taskElement.offsetWidth;
-      const taskHeight = taskElement.offsetHeight;
+      handleDragStart(e, taskElement);
+    });
 
-      taskElement.classList.add('dragging');
-
-      e.dataTransfer.setData('text/plain', taskElement.dataset.taskId);
-
-      taskClone = document.createElement('div');
-      taskClone.className = taskElement.className + ' task-clone';
-      taskClone.innerHTML = taskHTML;
-      taskClone.style.width = `${taskWidth}px`;
-      taskClone.style.height = `${taskHeight}px`;
-      taskClone.style.opacity = '0.3';
-      taskClone.style.position = 'absolute';
-      taskClone.style.pointerEvents = 'none';
-      taskClone.style.zIndex = '1000';
-      taskClone.style.top = '-9999px';
-      taskClone.style.left = '-9999px';
-
-      document.body.appendChild(taskClone);
-
-      e.dataTransfer.setDragImage(taskClone, taskWidth / 2, taskHeight / 2);
+    taskElement.addEventListener('touchstart', e => {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
 
       setTimeout(() => {
-        taskElement.classList.add('invisible');
-      }, 0);
+        if (
+          Math.abs(e.touches[0].clientY - touchStartY) < 10 &&
+          Math.abs(e.touches[0].clientX - touchStartX) < 10
+        ) {
+          handleDragStart(e, taskElement);
+        }
+      }, 200);
+    });
+
+    taskElement.addEventListener('touchmove', e => {
+      if (taskElement.classList.contains('dragging')) {
+        e.preventDefault();
+        handleTouchMove(e, taskElement);
+      }
+    });
+
+    taskElement.addEventListener('touchend', e => {
+      if (taskElement.classList.contains('dragging')) {
+        e.preventDefault();
+
+        const touch = e.changedTouches[0];
+        const elemBelow = document.elementFromPoint(
+          touch.clientX,
+          touch.clientY,
+        );
+        const column = elemBelow.closest('.task-list');
+
+        if (column) {
+          const taskId = taskElement.dataset.taskId;
+          const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+          if (taskIndex !== -1) {
+            const newColumnIndex = Number.parseInt(column.dataset.index);
+            tasks[taskIndex].column = newColumnIndex;
+
+            taskElement.remove();
+            column.appendChild(taskElement);
+
+            saveTasks();
+          }
+        }
+
+        handleDragEnd(taskElement);
+      }
     });
 
     taskElement.addEventListener('dragend', () => {
-      taskElement.classList.remove('dragging', 'invisible');
-
-      if (taskClone) {
-        taskClone.remove();
-        taskClone = null;
-      }
-
-      document.querySelectorAll('.task-clone').forEach(clone => clone.remove());
-      document.querySelectorAll('.task-placeholder').forEach(el => el.remove());
+      handleDragEnd(taskElement);
     });
 
     taskElement
@@ -694,6 +712,88 @@ document.addEventListener('DOMContentLoaded', () => {
       .addEventListener('click', () => {
         deleteTask(task.id);
       });
+  };
+
+  const handleDragStart = (e, taskElement) => {
+    const taskHTML = taskElement.innerHTML;
+    const taskStyle = window.getComputedStyle(taskElement);
+    const taskWidth = taskElement.offsetWidth;
+    const taskHeight = taskElement.offsetHeight;
+
+    taskElement.classList.add('dragging');
+
+    if (e.type === 'touchstart') {
+      taskElement.dataset.beingDragged = 'true';
+    } else {
+      e.dataTransfer.setData('text/plain', taskElement.dataset.taskId);
+    }
+
+    taskClone = document.createElement('div');
+    taskClone.className = taskElement.className + ' task-clone';
+    taskClone.innerHTML = taskHTML;
+    taskClone.style.width = `${taskWidth}px`;
+    taskClone.style.height = `${taskHeight}px`;
+    taskClone.style.opacity = '0.7';
+    taskClone.style.position = 'fixed';
+    taskClone.style.pointerEvents = 'none';
+    taskClone.style.zIndex = '1000';
+
+    if (e.type === 'touchstart') {
+      const touch = e.touches[0];
+      taskClone.style.top = `${touch.clientY - taskHeight / 2}px`;
+      taskClone.style.left = `${touch.clientX - taskWidth / 2}px`;
+    } else {
+      taskClone.style.top = '-9999px';
+      taskClone.style.left = '-9999px';
+      e.dataTransfer.setDragImage(taskClone, taskWidth / 2, taskHeight / 2);
+    }
+
+    document.body.appendChild(taskClone);
+
+    taskElement.style.opacity = '0.3';
+  };
+
+  const handleTouchMove = (e, taskElement) => {
+    const touch = e.touches[0];
+    const touchY = touch.clientY;
+    const touchX = touch.clientX;
+
+    if (taskClone) {
+      taskClone.style.top = `${touchY - taskElement.offsetHeight / 2}px`;
+      taskClone.style.left = `${touchX - taskElement.offsetWidth / 2}px`;
+    }
+
+    const elemBelow = document.elementFromPoint(touchX, touchY);
+    const column = elemBelow?.closest('.task-list');
+
+    if (column) {
+      const afterElement = getDragAfterElement(column, touchY);
+
+      taskPlaceholder.style.height = `${taskElement.offsetHeight}px`;
+      taskPlaceholder.style.width = `${taskElement.offsetWidth}px`;
+
+      document.querySelectorAll('.task-placeholder').forEach(el => el.remove());
+
+      if (!afterElement) {
+        column.appendChild(taskPlaceholder);
+      } else {
+        column.insertBefore(taskPlaceholder, afterElement);
+      }
+    }
+  };
+
+  const handleDragEnd = taskElement => {
+    taskElement.classList.remove('dragging');
+    taskElement.style.opacity = '1';
+    taskElement.dataset.beingDragged = 'false';
+
+    if (taskClone) {
+      taskClone.remove();
+      taskClone = null;
+    }
+
+    document.querySelectorAll('.task-clone').forEach(clone => clone.remove());
+    document.querySelectorAll('.task-placeholder').forEach(el => el.remove());
   };
 
   const deleteTask = taskId => {
@@ -736,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const autoScrollOnDrag = event => {
     const scrollContainer = document.querySelector('main > div');
-    const scrollSpeed = 50;
+    const scrollSpeed = 60;
     const edgeThreshold = 100;
 
     const {clientX} = event;
@@ -751,38 +851,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderBoards();
 
-  const searchIcon = document.getElementById('search-icon');
   const searchInput = document.getElementById('search-input');
-
-  const toggleSearchBar = () => {
-    const isHidden = searchInput.classList.contains('hidden');
-
-    if (isHidden) {
-      searchInput.classList.remove('hidden');
-      searchInput.classList.add('opacity-100');
-
-      if (window.innerWidth < 640) {
-        searchInput.classList.add('w-40');
-        searchInput.classList.remove('w-48');
-      } else {
-        searchInput.classList.add('w-48');
-        searchInput.classList.remove('w-40');
-      }
-
-      searchInput.focus();
-    } else {
-      searchInput.classList.add('hidden');
-      searchInput.classList.remove('w-40', 'w-48', 'opacity-100');
-    }
-  };
-
-  searchIcon.addEventListener('click', toggleSearchBar);
-
-  document.addEventListener('click', event => {
-    if (event.target === searchIcon) {
-      toggleSearchBar();
-    }
-  });
 
   searchInput.addEventListener('input', e => {
     searchTasks(e.target.value);
