@@ -49,6 +49,7 @@ class Boardify {
     this.taskModal = document.getElementById('task-modal');
     this.taskForm = document.getElementById('task-form');
     this.searchInput = document.getElementById('search-input');
+    this.searchInputMob = document.getElementById('search-input-mob');
   }
 
   attachGlobalEvents() {
@@ -98,6 +99,19 @@ class Boardify {
           this.searchInput.value = '';
           this.searchInput.classList.add('hidden');
           this.searchInput.classList.remove('w-40', 'w-48', 'opacity-100');
+          this.renderAllTasks();
+        }
+      });
+    }
+    if (this.searchInputMob) {
+      this.searchInputMob.addEventListener('input', e =>
+        this.searchTasks(e.target.value),
+      );
+      this.searchInputMob.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          this.searchInputMob.value = '';
+          this.searchInputMob.classList.add('hidden');
+          this.searchInputMob.classList.remove('w-40', 'w-48', 'opacity-100');
           this.renderAllTasks();
         }
       });

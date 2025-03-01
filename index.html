@@ -29,7 +29,7 @@
 
         <div class="flex gap-2 md:gap-4">
           <div class="flex items-center space-x-4">
-            <div class="relative flex w-42 items-center md:w-64">
+            <div class="relative hidden w-42 items-center sm:flex md:w-64">
               <i
                 class="fas fa-search absolute left-3 text-xs text-gray-500 dark:text-gray-300"
               ></i>
@@ -90,7 +90,19 @@
       </nav>
     </header>
 
-    <main class="mx-auto h-[85dvh] max-w-7xl px-6 py-6 md:px-12">
+    <main class="mx-auto h-[80dvh] md:h-[84dvh] max-w-7xl px-6 py-6 max-sm:pt-2 md:px-12">
+      <div class="relative mb-8 flex items-center space-x-4 sm:hidden">
+        <i
+          class="fas fa-search absolute left-3 text-xs text-gray-500 dark:text-gray-300"
+        ></i>
+        <input
+          id="search-input-mob"
+          type="text"
+          placeholder="Search for tasks..."
+          class="w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 min-h-9"
+        />
+      </div>
+
       <div
         class="flex h-full w-full flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-4 md:gap-6"
       >
