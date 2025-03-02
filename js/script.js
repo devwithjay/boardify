@@ -741,11 +741,14 @@ class Boardify {
   }
 
   autoScrollOnDrag(event) {
-    const scrollContainer = document.querySelector('main > div');
-    const scrollSpeed = 60;
-    const edgeThreshold = 100;
+    const scrollContainer = document.querySelector('main > div.board');
+    if (!scrollContainer) return;
+
+    const scrollSpeed = 90;
+    const edgeThreshold = 110;
     const {clientX} = event;
     const {left, right} = scrollContainer.getBoundingClientRect();
+
     if (clientX < left + edgeThreshold) {
       scrollContainer.scrollBy({left: -scrollSpeed, behavior: 'smooth'});
     } else if (clientX > right - edgeThreshold) {
