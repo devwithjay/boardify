@@ -12,7 +12,7 @@
     <title>Boardify</title>
   </head>
 
-  <body class="bg-white transition-colors duration-300 dark:bg-gray-900">
+  <body class="bg-white transition-colors duration-300 dark:bg-[#121617]">
     <header class="mx-auto w-full max-w-7xl px-6 py-6 md:px-12">
       <nav class="flex flex-wrap items-center justify-between">
         <span
@@ -37,7 +37,7 @@
                 id="search-input"
                 type="text"
                 placeholder="Search for tasks..."
-                class="w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+                class="w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-gray-300 dark:focus:border-gray-400"
               />
             </div>
           </div>
@@ -109,7 +109,7 @@
         class="board flex h-full w-full flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-4 max-md:ml-6 md:gap-6"
       >
         <div
-          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
         >
           <div
             class="flex flex-shrink-0 items-center justify-between bg-sky-200 p-3 text-gray-700 dark:bg-sky-300 dark:text-gray-800"
@@ -144,7 +144,7 @@
         </div>
 
         <div
-          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
         >
           <div
             class="flex flex-shrink-0 items-center justify-between bg-amber-200 p-3 text-gray-700 dark:bg-amber-300 dark:text-gray-800"
@@ -179,7 +179,7 @@
         </div>
 
         <div
-          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-800"
+          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
         >
           <div
             class="flex flex-shrink-0 items-center justify-between bg-green-200 p-3 text-gray-700 dark:bg-green-300 dark:text-gray-800"
@@ -228,7 +228,7 @@
       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
     >
       <div
-        class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800"
+        class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
         id="modal-content"
       >
         <div
@@ -255,7 +255,7 @@
               <input
                 type="text"
                 id="task-title"
-                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
                 required
               />
             </div>
@@ -269,7 +269,7 @@
               <textarea
                 id="task-description"
                 rows="3"
-                class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+                class="w-full resize-none rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
               ></textarea>
             </div>
 
@@ -279,14 +279,32 @@
                 class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >Priority</label
               >
-              <select
-                id="task-priority"
-                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </select>
+              <div class="relative w-full">
+                <select
+                  id="task-priority"
+                  class="w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+                <div
+                  class="pointer-events-none absolute inset-y-0 right-3 flex items-center"
+                >
+                  <svg
+                    class="h-4 w-4 text-gray-500 dark:text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <div class="mb-4">
@@ -298,7 +316,7 @@
               <input
                 type="date"
                 id="task-due-date"
-                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
               />
             </div>
 
@@ -311,7 +329,7 @@
               <input
                 type="text"
                 id="task-assignee"
-                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:ring-indigo-400"
+                class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
               />
             </div>
 
@@ -319,7 +337,7 @@
               <button
                 type="button"
                 id="cancel-modal"
-                class="cursor-pointer rounded-md bg-gray-200 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                class="cursor-pointer rounded-md bg-gray-200 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-[#202227] dark:text-gray-300 dark:hover:bg-gray-600"
               >
                 Cancel
               </button>
@@ -341,7 +359,7 @@
     >
       >
       <div
-        class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800"
+        class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
       >
         <div
           class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
@@ -364,7 +382,7 @@
               <input
                 id="board-name-input"
                 type="text"
-                class="w-full rounded-md border bg-gray-50 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                class="w-full rounded-md border bg-gray-50 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-[#202227] dark:text-white"
               />
             </div>
             <div class="mb-4">
@@ -390,7 +408,7 @@
                 <button
                   type="button"
                   id="cancel-edit-board"
-                  class="cursor-pointer rounded bg-gray-200 px-3 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                  class="cursor-pointer rounded bg-gray-200 px-3 py-2 text-gray-700 transition-colors hover:bg-gray-300 dark:bg-[#202227] dark:text-gray-300 dark:hover:bg-gray-600"
                 >
                   Cancel
                 </button>

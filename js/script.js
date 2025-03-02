@@ -182,15 +182,24 @@ class Boardify {
     this.boards.forEach((board, index) => {
       const boardElement = document.createElement('div');
       boardElement.className =
-        'bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col w-[320px] flex-shrink-0 h-full';
+        'rounded-lg overflow-hidden flex flex-col w-[320px] flex-shrink-0 h-full';
       boardElement.innerHTML = `
-        <div style="background:${board.color}" class="text-gray-700 dark:text-gray-800 p-3 flex justify-between items-center flex-shrink-0">
-          <h3 class="font-semibold text-sm md:text-base">${board.title}</h3>
-          <div class="relative">
-            <button class="board-options-btn cursor-pointer text-gray-700 dark:text-gray-800 hover:bg-white/20 p-1 rounded transition-colors" data-index="${index}">
-              <i class="fas fa-ellipsis-v text-sm"></i>
-            </button>
-            <div class="board-options-menu hidden absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 rounded shadow-lg z-10 w-32 py-1" data-index="${index}">
+        <div class="my-4">
+          <div class="flex justify-between items-center flex-shrink-0 relative">
+          <div>
+            <h3 style="background: ${board.color}; color: ${this.getContrastingText(board.color)}"
+              class="font-semibold text-sm md:text-base px-2 py-1 rounded">
+              ${board.title}
+            </h3>
+          </div>
+            <div class="flex items-center space-x-2">
+              <button class="plus-btn cursor-pointer text-gray-700 dark:text-gray-200 hover:bg-white/20 dark:hover:bg-gray-700/ 20 p-1 rounded transition-colors" data-index="${index}">
+                <i class="fas fa-plus text-sm"></i>
+              </button>
+              <button class="board-options-btn cursor-pointer text-gray-700 dark:text-gray-200 hover:bg-white/20  dark:hover:bg-gray-700/20 p-1 rounded transition-colors" data-index="${index}">
+                <i class="fas fa-ellipsis-h text-sm"></i>
+              </button>
+            <div class="board-options-menu hidden absolute right-0 top-full mt-1 bg-white dark:bg-[#121617] rounded shadow-lg z-10 w-32 py-1" data-index="${index}">
               <button class="edit-board-btn w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700" data-index="${index}">
                 <i class="fas fa-pencil-alt mr-2"></i> Edit
               </button>
@@ -203,19 +212,21 @@ class Boardify {
             </div>
           </div>
         </div>
-        <div class="task-list bg-gray-50 dark:bg-gray-700 flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
-        <div class="flex-shrink-0 p-4">
-          <button class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200" data-index="${index}">
-            <i class="fas fa-plus text-sm"></i> Add Task
-          </button>
         </div>
-      `;
+        <div class="task-list bg-gray-50 dark:bg-[#202227] flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
+          <div class="bg-gray-50 dark:bg-[#202227] flex-shrink-0 p-4">
+            <button class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200" data-index="${index}">
+          <i class="fas fa-plus text-sm"></i> Add Task
+        </button>
+      </div>
+    `;
       this.boardsContainer.appendChild(boardElement);
     });
+
     const addBoardButton = document.createElement('button');
     addBoardButton.id = 'add-new-board-btn';
     addBoardButton.className =
-      'flex h-full min-w-[360px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300';
+      'flex h-full min-w-[360px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-400 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300';
     addBoardButton.innerHTML = `
         <i class="fas fa-plus fa-2x mb-2"></i>
         <span class="font-medium">Add New Board</span>
@@ -265,6 +276,13 @@ class Boardify {
       btn.addEventListener('click', () => {
         const index = parseInt(btn.dataset.index, 10);
         this.showSortOptions(index);
+      });
+    });
+
+    document.querySelectorAll('.plus-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = parseInt(btn.dataset.index, 10);
+        this.openTaskModal(index);
       });
     });
 
@@ -548,7 +566,7 @@ class Boardify {
   renderTask(task, targetColumn) {
     const taskElement = document.createElement('div');
     taskElement.className =
-      'task bg-white dark:bg-gray-800 rounded-md shadow-lg p-4 mt-1 flex flex-col hover:shadow-xl transition-shadow relative';
+      'task bg-white dark:bg-[#151A1C] rounded-md shadow-lg p-4 mt-1 flex flex-col hover:shadow-xl transition-shadow relative';
     taskElement.id = `task-${task.id}`;
     taskElement.dataset.taskId = task.id;
     taskElement.draggable = true;
@@ -818,5 +836,21 @@ class Boardify {
     this.tasks = this.tasks.filter(task => task.column !== boardIndex);
     this.tasks = [...this.tasks, ...boardTasks];
     this.saveTasks();
+  }
+
+  getContrastingText(color) {
+    let hex = color.replace('#', '');
+    if (hex.length === 3) {
+      hex = hex
+        .split('')
+        .map(x => x + x)
+        .join('');
+    }
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+
+    return brightness > 186 ? '#1f2937' : '#f9fafb';
   }
 }
