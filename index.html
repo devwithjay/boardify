@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,354&family=Onest:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="shortcut icon" href="./assets/favicon.svg" />
     <link rel="stylesheet" href="./css/style.css" />
     <link
@@ -12,20 +18,37 @@
     <title>Boardify</title>
   </head>
 
-  <body class="bg-white transition-colors duration-300 dark:bg-[#121617]">
+  <body
+    class="flex min-h-[100dvh] flex-col justify-between bg-white font-[Inter] transition-colors duration-300 dark:bg-[#121617]"
+  >
     <header class="mx-auto w-full max-w-7xl px-6 py-6 md:px-12">
       <nav class="flex flex-wrap items-center justify-between">
-        <span
-          class="text-lg tracking-wider text-gray-800 md:text-xl dark:text-white"
-        >
-          Developed By
-          <a
-            href="https://devwithjay.com"
-            class="animate-pulse font-medium transition-opacity duration-300 hover:underline hover:opacity-80"
+        <div class="flex items-center space-x-3">
+          <svg
+            class="size-6 text-gray-800 dark:text-white"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
           >
-            Jay
-          </a>
-        </span>
+            <path
+              d="M9.6 4H4.4C3.6268 4 3 4.6268 3 5.4V19.6C3 20.3732 3.6268 21 4.4 21H9.6C10.3732 21 11 20.3732 11 19.6V5.4C11 4.6268 10.3732 4 9.6 4Z"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+            ></path>
+            <path
+              d="M19.6 4H15.4C14.6268 4 14 4.6268 14 5.4V14.6C14 15.3732 14.6268 16 15.4 16H19.6C20.3732 16 21 15.3732 21 14.6V5.4C21 4.6268 20.3732 4 19.6 4Z"
+              stroke="currentColor"
+              stroke-width="1"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+          <span
+            class="text-lg font-medium tracking-wide text-gray-800 dark:text-white"
+          >
+            Boardify
+          </span>
+        </div>
 
         <div class="flex gap-2 md:gap-4">
           <div class="flex items-center space-x-4">
@@ -91,7 +114,7 @@
     </header>
 
     <main
-      class="mx-auto h-[80dvh] max-w-7xl py-6 max-sm:pt-2 md:px-12 lg:h-[84dvh]"
+      class="mx-auto h-[75dvh] max-w-7xl py-2 max-sm:pt-2 md:px-12 lg:h-[82dvh]"
     >
       <div class="relative mx-6 mb-8 flex items-center space-x-4 sm:hidden">
         <i
@@ -106,7 +129,7 @@
       </div>
 
       <div
-        class="board flex h-full w-full flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-4 max-md:ml-6 md:gap-6"
+        class="board flex size-full flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-4 max-md:ml-6 md:gap-6"
       >
         <div
           class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
@@ -132,7 +155,6 @@
           <div
             class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-4 dark:bg-gray-700"
           ></div>
-
           <div class="flex-shrink-0 p-4">
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
@@ -400,7 +422,7 @@
               <button
                 type="button"
                 id="clear-board-btn"
-                class="cursor-pointer rounded bg-red-500 px-3 py-2 text-white transition-colors hover:bg-red-600"
+                class="cursor-pointer rounded bg-rose-500 px-3 py-2 text-white transition-colors hover:bg-rose-600"
               >
                 Clear Board
               </button>
@@ -425,13 +447,22 @@
       </div>
     </div>
 
-    <footer class="fixed right-0 bottom-0 z-10 flex justify-end p-4 md:p-8">
+    <footer
+      class="z-10 mx-auto flex w-full max-w-7xl items-end justify-between p-4 px-6 md:px-12"
+    >
+      <a
+        href="https://devwithjay.com"
+        class="text-sm font-light text-gray-800 transition-opacity duration-300 dark:text-white"
+      >
+        Developed By Jay
+      </a>
+
       <a
         href="https://github.com/devwithjay/boardify"
         target="_blank"
         aria-label="GitHub repository"
         title="View GitHub Repository"
-        class="flex h-8 w-8 animate-pulse items-center justify-center decoration-2 underline-offset-4 transition-all duration-300 hover:underline md:h-9 md:w-9"
+        class="flex size-[22px] animate-pulse items-center justify-center transition-all duration-300 hover:underline"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -440,7 +471,7 @@
         >
           <path
             d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.5 11.5 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12"
-          />
+          ></path>
         </svg>
       </a>
     </footer>
