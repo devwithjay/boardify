@@ -1,34 +1,76 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="custom-scrollbar">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Optimization -->
+    <meta
+      name="description"
+      content="Manage your tasks efficiently with Boardify's intuitive kanban board."
+    />
+    <meta
+      property="og:title"
+      content="Boardify - The simple and powerful kanban board for task management."
+    />
+    <meta
+      property="og:description"
+      content="Boardify is a flexible kanban board application that helps you organize tasks, boost productivity, and streamline your workflow."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://the-boardify.vercel.app/" />
+
+    <title>Boardify</title>
+
+    <!-- Favicons Section -->
+    <link rel="shortcut icon" href="./assets/favicon.svg" />
+
+    <!-- Light mode favicon -->
+    <link
+      rel="icon"
+      href="./assets/favicon-light.svg"
+      type="image/x-icon"
+      media="(prefers-color-scheme: light)"
+    />
+
+    <!-- Dark mode favicon -->
+    <link
+      rel="icon"
+      href="./assets/favicon.svg"
+      type="image/x-icon"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,354&family=Onest:wght@100..900&display=swap"
       rel="stylesheet"
     />
-    <link rel="shortcut icon" href="./assets/favicon.svg" />
+
+     <!-- Stylesheets -->
     <link rel="stylesheet" href="./css/style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
     />
-    <title>Boardify</title>
   </head>
 
   <body
-    class="flex min-h-[100dvh] flex-col justify-between bg-white font-[Inter] transition-colors duration-300 dark:bg-[#121617]"
+    class="flex min-h-[100dvh] flex-col bg-white font-[Inter] transition-colors duration-300 dark:bg-[#121617]"
   >
-    <header class="mx-auto w-full max-w-7xl px-6 py-6 md:px-12">
-      <nav class="flex flex-wrap items-center justify-between">
+    <header
+      class="sticky top-0 left-0 z-50 mx-auto w-full max-w-7xl px-6 py-4 backdrop-blur-sm md:px-12"
+    >
+      <nav
+        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between"
+      >
         <div class="flex items-center space-x-3">
           <svg
-            class="size-6 text-gray-800 dark:text-white"
+            class="size-6 text-gray-800 md:size-8 dark:text-white"
             viewBox="0 0 24 24"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               d="M9.6 4H4.4C3.6268 4 3 4.6268 3 5.4V19.6C3 20.3732 3.6268 21 4.4 21H9.6C10.3732 21 11 20.3732 11 19.6V5.4C11 4.6268 10.3732 4 9.6 4Z"
@@ -44,7 +86,7 @@
             ></path>
           </svg>
           <span
-            class="text-lg font-medium tracking-wide text-gray-800 dark:text-white"
+            class="text-lg font-medium tracking-wide text-gray-800 md:text-xl dark:text-white"
           >
             Boardify
           </span>
@@ -60,7 +102,7 @@
                 id="search-input"
                 type="text"
                 placeholder="Search for tasks..."
-                class="w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-gray-300 dark:focus:border-gray-400"
+                class="h-[34px] w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-gray-300 dark:focus:border-gray-400"
               />
             </div>
           </div>
@@ -68,7 +110,7 @@
           <button
             id="theme-toggle"
             aria-label="Toggle dark mode"
-            class="flex cursor-pointer items-center rounded-lg p-2 text-gray-800 transition-all duration-300 dark:text-gray-300"
+            class="ml-2 flex cursor-pointer items-center rounded-lg text-gray-800 transition-all duration-300 dark:text-gray-300"
           >
             <svg
               id="sun-icon"
@@ -113,10 +155,8 @@
       </nav>
     </header>
 
-    <main
-      class="mx-auto h-[75dvh] max-w-7xl py-2 max-sm:pt-2 md:px-12 lg:h-[82dvh]"
-    >
-      <div class="relative mx-6 mb-8 flex items-center space-x-4 sm:hidden">
+    <main class="mx-auto w-full max-w-7xl flex-1 px-6 pt-4 md:px-12 md:pb-2">
+      <div class="relative mb-6 flex items-center space-x-4 sm:hidden">
         <i
           class="fas fa-search absolute left-3 text-xs text-gray-500 dark:text-gray-300"
         ></i>
@@ -124,15 +164,15 @@
           id="search-input-mob"
           type="text"
           placeholder="Search for tasks..."
-          class="min-h-9 w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300"
+          class="min-h-9 w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-gray-300"
         />
       </div>
 
       <div
-        class="board flex size-full flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-4 max-md:ml-6 md:gap-6"
+        class="board custom-scrollbar horizontal-scrollbar flex flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-6 md:gap-6"
       >
         <div
-          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
+          class="board-container flex min-h-[75dvh] max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md md:min-h-[80dvh] dark:bg-[#202227]"
         >
           <div
             class="flex flex-shrink-0 items-center justify-between bg-sky-200 p-3 text-gray-700 dark:bg-sky-300 dark:text-gray-800"
@@ -159,14 +199,14 @@
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
-              <i class="fas fa-plus text-sm"></i>
+              <i class="fas fa-plus text-[12px]"></i>
               Add Task
             </button>
           </div>
         </div>
 
         <div
-          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
+          class="board-container flex min-h-[75dvh] max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md md:min-h-[80dvh] dark:bg-[#202227]"
         >
           <div
             class="flex flex-shrink-0 items-center justify-between bg-amber-200 p-3 text-gray-700 dark:bg-amber-300 dark:text-gray-800"
@@ -194,14 +234,14 @@
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
-              <i class="fas fa-plus text-sm"></i>
+              <i class="fas fa-plus text-[12px]"></i>
               Add Task
             </button>
           </div>
         </div>
 
         <div
-          class="board-container flex aspect-square h-full max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md dark:bg-[#202227]"
+          class="board-container flex min-h-[75dvh] max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md md:min-h-[80dvh] dark:bg-[#202227]"
         >
           <div
             class="flex flex-shrink-0 items-center justify-between bg-green-200 p-3 text-gray-700 dark:bg-green-300 dark:text-gray-800"
@@ -229,7 +269,7 @@
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
-              <i class="fas fa-plus text-sm"></i>
+              <i class="fas fa-plus text-[12px]"></i>
               Add Task
             </button>
           </div>
@@ -237,7 +277,7 @@
 
         <button
           id="add-new-board-btn"
-          class="flex h-full min-w-[320px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+          class="flex min-w-[320px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-600 md:min-h-[80dvh] dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300"
         >
           <i class="fas fa-plus fa-2x mb-2"></i>
           <span class="font-medium">Add New Board</span>
@@ -379,7 +419,6 @@
       id="edit-board-modal"
       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
     >
-      >
       <div
         class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
       >
@@ -448,7 +487,7 @@
     </div>
 
     <footer
-      class="z-10 mx-auto flex w-full max-w-7xl items-end justify-between p-4 px-6 md:px-12"
+      class="mx-auto flex w-full max-w-7xl items-center justify-between bg-white p-6 md:px-12 dark:bg-[#121617]"
     >
       <a
         href="https://devwithjay.com"

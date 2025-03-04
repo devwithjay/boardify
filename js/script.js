@@ -20,7 +20,7 @@ class Boardify {
     this.editingTaskId = null;
     this.taskPlaceholder = document.createElement('div');
     this.taskPlaceholder.className =
-      'task-placeholder border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-md p-4 bg-gray-50 dark:bg-gray-700';
+      'task-placeholder border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-md p-4 bg-gray-50 dark:bg-[#202227]';
     this.taskClone = null;
   }
 
@@ -36,7 +36,7 @@ class Boardify {
     this.themeToggle = document.getElementById('theme-toggle');
     this.sunIcon = document.getElementById('sun-icon');
     this.moonIcon = document.getElementById('moon-icon');
-    this.boardsContainer = document.querySelector('main div.flex.flex-nowrap');
+    this.boardsContainer = document.querySelector('.board');
     this.editBoardModal = document.getElementById('edit-board-modal');
     this.closeEditBoardModal = document.getElementById(
       'close-edit-board-modal',
@@ -97,8 +97,6 @@ class Boardify {
       this.searchInput.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
           this.searchInput.value = '';
-          this.searchInput.classList.add('hidden');
-          this.searchInput.classList.remove('w-40', 'w-48', 'opacity-100');
           this.renderAllTasks();
         }
       });
@@ -110,8 +108,6 @@ class Boardify {
       this.searchInputMob.addEventListener('keydown', e => {
         if (e.key === 'Escape') {
           this.searchInputMob.value = '';
-          this.searchInputMob.classList.add('hidden');
-          this.searchInputMob.classList.remove('w-40', 'w-48', 'opacity-100');
           this.renderAllTasks();
         }
       });
@@ -182,7 +178,7 @@ class Boardify {
     this.boards.forEach((board, index) => {
       const boardElement = document.createElement('div');
       boardElement.className =
-        'rounded-lg overflow-hidden flex flex-col w-[320px] flex-shrink-0 h-full';
+        'rounded-lg min-h-[74dvh] md:min-h-[78dvh] overflow-hidden flex flex-col w-[350px] xl:w-[420px] flex-shrink-0';
       boardElement.innerHTML = `
         <div class="my-4">
           <div class="flex justify-between items-center flex-shrink-0 relative">
@@ -215,8 +211,8 @@ class Boardify {
         </div>
         <div class="task-list bg-gray-50 dark:bg-[#202227] flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
           <div class="bg-gray-50 dark:bg-[#202227] flex-shrink-0 p-4">
-            <button class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200" data-index="${index}">
-          <i class="fas fa-plus text-sm"></i> Add Task
+            <button class="add-task-btn text-[14px] flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200" data-index="${index}">
+          <i class="fas fa-plus text-[12px]"></i> Add Task
         </button>
       </div>
     `;
@@ -226,7 +222,7 @@ class Boardify {
     const addBoardButton = document.createElement('button');
     addBoardButton.id = 'add-new-board-btn';
     addBoardButton.className =
-      'flex h-full min-w-[360px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-400 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300';
+      'flex min-w-[360px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-400 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-[#202227] dark:hover:text-gray-300';
     addBoardButton.innerHTML = `
         <i class="fas fa-plus fa-2x mb-2"></i>
         <span class="font-medium">Add New Board</span>
@@ -583,7 +579,7 @@ class Boardify {
       </p>
       ${task.dueDate ? `<p class="text-gray-600 dark:text-gray-400 text-sm">Due: ${task.dueDate}</p>` : ''}
       ${task.assignee ? `<p class="text-gray-600 dark:text-gray-400 break-words line-clamp-3 text-sm">Assignee: ${task.assignee}</p>` : ''}
-      <div class="flex justify-end space-x-2 mt-4">
+      <div class="flex justify-end space-x-2">
         <button class="edit-task-btn p-2 text-gray-700 rounded-md transition-all hover:bg-white/20 dark:text-gray-300" data-task-id="${task.id}">
           <i class="fas fa-pencil-alt text-sm"></i>
         </button>
@@ -759,10 +755,10 @@ class Boardify {
   }
 
   autoScrollOnDrag(event) {
-    const scrollContainer = document.querySelector('main > div.board');
+    const scrollContainer = document.querySelector('.board');
     if (!scrollContainer) return;
 
-    const scrollSpeed = 90;
+    const scrollSpeed = 100;
     const edgeThreshold = 110;
     const {clientX} = event;
     const {left, right} = scrollContainer.getBoundingClientRect();
@@ -779,26 +775,65 @@ class Boardify {
     sortModal.className =
       'fixed inset-0 bg-black/20 bg-opacity-50 flex items-center justify-center z-50';
     sortModal.innerHTML = `
-      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+      <div class="bg-white dark:bg-[#121617] rounded-lg p-6 max-w-md w-full">
         <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Sort Tasks</h3>
-        <div class="mb-4">
+       <div class="relative w-full mb-4">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sort by</label>
-          <select id="sort-by" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-            <option value="priority">Priority</option>
-            <option value="dueDate">Due Date</option>
-            <option value="title">Title</option>
-          </select>
+          <div class="relative w-full">
+            <select
+              id="sort-by"
+              class="w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
+            >
+              <option value="priority">Priority</option>
+              <option value="dueDate">Due Date</option>
+              <option value="title">Title</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+              <svg
+                class="h-4 w-4 text-gray-500 dark:text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
-        <div class="mb-6">
+
+        <div class="relative w-full mb-6">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Direction</label>
-          <select id="sort-direction" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-          </select>
+          <div class="relative w-full">
+            <select
+              id="sort-direction"
+              class="w-full appearance-none rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-sm text-gray-900 focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-white dark:focus:ring-indigo-400"
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+              <svg
+                class="h-4 w-4 text-gray-500 dark:text-gray-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </div>
+          </div>
         </div>
         <div class="flex justify-end space-x-3">
-          <button id="cancel-sort" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">Cancel</button>
-          <button id="apply-sort" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Apply</button>
+          <button id="cancel-sort" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 dark:bg-[#202227] dark:text-gray-300 dark:hover:bg-gray-600">Cancel</button>
+          <button id="apply-sort" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">Apply</button>
         </div>
       </div>
     `;

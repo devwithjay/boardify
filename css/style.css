@@ -1,3 +1,48 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .dark input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  .horizontal-scrollbar {
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #888 transparent;
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 2px;
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .horizontal-scrollbar::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+  }
+}
