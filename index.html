@@ -49,7 +49,7 @@
       rel="stylesheet"
     />
 
-     <!-- Stylesheets -->
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="./css/style.css" />
     <link
       rel="stylesheet"
@@ -156,7 +156,7 @@
     </header>
 
     <main class="mx-auto w-full max-w-7xl flex-1 px-6 pt-4 md:px-12 md:pb-2">
-      <div class="relative mb-6 flex items-center space-x-4 sm:hidden">
+      <section class="relative mb-6 flex items-center space-x-4 sm:hidden">
         <i
           class="fas fa-search absolute left-3 text-xs text-gray-500 dark:text-gray-300"
         ></i>
@@ -166,15 +166,15 @@
           placeholder="Search for tasks..."
           class="min-h-9 w-full rounded-md border border-gray-400 bg-white px-3 py-1 pl-8 text-sm text-gray-700 focus:border-gray-600 focus:ring-0 focus:outline-none dark:border-gray-600 dark:bg-[#202227] dark:text-gray-300"
         />
-      </div>
+      </section>
 
-      <div
+      <section
         class="board custom-scrollbar horizontal-scrollbar flex flex-nowrap gap-4 overflow-x-auto overflow-y-hidden pb-6 md:gap-6"
       >
         <div
           class="board-container flex min-h-[75dvh] max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md md:min-h-[80dvh] dark:bg-[#202227]"
         >
-          <div
+          <header
             class="flex flex-shrink-0 items-center justify-between bg-sky-200 p-3 text-gray-700 dark:bg-sky-300 dark:text-gray-800"
           >
             <h3 class="text-sm font-semibold md:text-base">To Do</h3>
@@ -190,25 +190,25 @@
                 <i class="fas fa-trash text-sm"></i>
               </button>
             </div>
-          </div>
+          </header>
 
-          <div
+          <section
             class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-4 dark:bg-gray-700"
-          ></div>
-          <div class="flex-shrink-0 p-4">
+          ></section>
+          <footer class="flex-shrink-0 p-4">
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
               <i class="fas fa-plus text-[12px]"></i>
               Add Task
             </button>
-          </div>
+          </footer>
         </div>
 
         <div
           class="board-container flex min-h-[75dvh] max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md md:min-h-[80dvh] dark:bg-[#202227]"
         >
-          <div
+          <header
             class="flex flex-shrink-0 items-center justify-between bg-amber-200 p-3 text-gray-700 dark:bg-amber-300 dark:text-gray-800"
           >
             <h3 class="text-sm font-semibold md:text-base">In Progress</h3>
@@ -224,26 +224,26 @@
                 <i class="fas fa-trash text-sm"></i>
               </button>
             </div>
-          </div>
+          </header>
 
-          <div
+          <section
             class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-3 dark:bg-gray-700"
-          ></div>
+          ></section>
 
-          <div class="flex-shrink-0 p-4">
+          <footer class="flex-shrink-0 p-4">
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
               <i class="fas fa-plus text-[12px]"></i>
               Add Task
             </button>
-          </div>
+          </footer>
         </div>
 
         <div
           class="board-container flex min-h-[75dvh] max-w-[375px] min-w-[320px] flex-shrink-0 flex-col overflow-hidden rounded-lg bg-white shadow-md md:min-h-[80dvh] dark:bg-[#202227]"
         >
-          <div
+          <header
             class="flex flex-shrink-0 items-center justify-between bg-green-200 p-3 text-gray-700 dark:bg-green-300 dark:text-gray-800"
           >
             <h3 class="text-sm font-semibold md:text-base">Done</h3>
@@ -259,20 +259,20 @@
                 <i class="fas fa-trash text-sm"></i>
               </button>
             </div>
-          </div>
+          </header>
 
-          <div
+          <section
             class="task-list flex-grow space-y-3 overflow-y-auto bg-gray-50 p-3 dark:bg-gray-700"
-          ></div>
+          ></section>
 
-          <div class="flex-shrink-0 p-4">
+          <footer class="flex-shrink-0 p-4">
             <button
               class="add-task-btn flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200"
             >
               <i class="fas fa-plus text-[12px]"></i>
               Add Task
             </button>
-          </div>
+          </footer>
         </div>
 
         <button
@@ -282,10 +282,10 @@
           <i class="fas fa-plus fa-2x mb-2"></i>
           <span class="font-medium">Add New Board</span>
         </button>
-      </div>
+      </section>
     </main>
 
-    <div
+    <dialog
       id="task-modal"
       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
     >
@@ -293,7 +293,7 @@
         class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
         id="modal-content"
       >
-        <div
+        <header
           class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
         >
           <h3 class="font-medium text-gray-900 dark:text-white">
@@ -305,8 +305,8 @@
           >
             &times;
           </button>
-        </div>
-        <div class="p-4">
+        </header>
+        <section class="p-4">
           <form id="task-form">
             <div class="mb-4">
               <label
@@ -395,7 +395,7 @@
               />
             </div>
 
-            <div class="mt-6 flex justify-end space-x-4">
+            <footer class="mt-6 flex justify-end space-x-4">
               <button
                 type="button"
                 id="cancel-modal"
@@ -409,20 +409,20 @@
               >
                 Save Task
               </button>
-            </div>
+            </footer>
           </form>
-        </div>
+        </section>
       </div>
-    </div>
+    </dialog>
 
-    <div
+    <dialog
       id="edit-board-modal"
       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
     >
       <div
         class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
       >
-        <div
+        <header
           class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
         >
           <h3 class="font-medium text-gray-900 dark:text-white">Edit Board</h3>
@@ -432,8 +432,8 @@
           >
             &times;
           </button>
-        </div>
-        <div class="p-4">
+        </header>
+        <section class="p-4">
           <form id="edit-board-form">
             <div class="mb-4">
               <label
@@ -457,7 +457,7 @@
                 class="h-10 w-10 cursor-pointer rounded-md border-0 bg-transparent p-0"
               />
             </div>
-            <div class="mt-6 flex items-center justify-between">
+            <footer class="mt-6 flex items-center justify-between">
               <button
                 type="button"
                 id="clear-board-btn"
@@ -480,11 +480,11 @@
                   Save Changes
                 </button>
               </div>
-            </div>
+            </footer>
           </form>
-        </div>
+        </section>
       </div>
-    </div>
+    </dialog>
 
     <footer
       class="mx-auto flex w-full max-w-7xl items-center justify-between bg-white p-6 md:px-12 dark:bg-[#121617]"
