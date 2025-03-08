@@ -285,7 +285,7 @@
       </section>
     </main>
 
-    <dialog
+    <div
       id="task-modal"
       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
     >
@@ -293,7 +293,7 @@
         class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
         id="modal-content"
       >
-        <header
+        <div
           class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
         >
           <h3 class="font-medium text-gray-900 dark:text-white">
@@ -305,8 +305,8 @@
           >
             &times;
           </button>
-        </header>
-        <section class="p-4">
+        </div>
+        <div class="p-4">
           <form id="task-form">
             <div class="mb-4">
               <label
@@ -395,7 +395,7 @@
               />
             </div>
 
-            <footer class="mt-6 flex justify-end space-x-4">
+            <div class="mt-6 flex justify-end space-x-4">
               <button
                 type="button"
                 id="cancel-modal"
@@ -409,20 +409,20 @@
               >
                 Save Task
               </button>
-            </footer>
+            </div>
           </form>
-        </section>
+        </div>
       </div>
-    </dialog>
+    </div>
 
-    <dialog
+    <div
       id="edit-board-modal"
       class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4"
     >
       <div
         class="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg dark:bg-[#121617]"
       >
-        <header
+        <div
           class="flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700"
         >
           <h3 class="font-medium text-gray-900 dark:text-white">Edit Board</h3>
@@ -432,8 +432,8 @@
           >
             &times;
           </button>
-        </header>
-        <section class="p-4">
+        </div>
+        <div class="p-4">
           <form id="edit-board-form">
             <div class="mb-4">
               <label
@@ -457,7 +457,7 @@
                 class="h-10 w-10 cursor-pointer rounded-md border-0 bg-transparent p-0"
               />
             </div>
-            <footer class="mt-6 flex items-center justify-between">
+            <div class="mt-6 flex items-center justify-between">
               <button
                 type="button"
                 id="clear-board-btn"
@@ -480,11 +480,11 @@
                   Save Changes
                 </button>
               </div>
-            </footer>
+            </div>
           </form>
-        </section>
+        </div>
       </div>
-    </dialog>
+    </div>
 
     <footer
       class="mx-auto flex w-full max-w-7xl items-center justify-between bg-white p-6 md:px-12 dark:bg-[#121617]"
