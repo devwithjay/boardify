@@ -27,7 +27,6 @@ class TaskManager {
     this.taskModal = document.getElementById('task-modal');
     this.taskForm = document.getElementById('task-form');
 
-    // Simply show the modal - it already has the necessary classes in the HTML
     this.taskModal.classList.remove('hidden');
     this.taskModal.classList.add('flex');
 

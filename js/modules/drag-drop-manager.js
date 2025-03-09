@@ -89,18 +89,21 @@ class DragDropManager {
     const draggableElements = [
       ...container.querySelectorAll('.task:not(.dragging)'),
     ];
-    return draggableElements.reduce(
-      (closest, child) => {
-        const box = child.getBoundingClientRect();
-        const offset = y - box.top - box.height / 2;
-        if (offset < 0 && offset > closest.offset) {
-          return {offset: offset, element: child};
-        } else {
-          return closest;
-        }
-      },
-      {offset: Number.NEGATIVE_INFINITY},
-    ).element;
+
+    let closest = null;
+    let closestOffset = Number.POSITIVE_INFINITY;
+
+    draggableElements.forEach(task => {
+      const box = task.getBoundingClientRect();
+      const offset = y - (box.top + box.height / 2);
+
+      if (offset < 0 && Math.abs(offset) < closestOffset) {
+        closestOffset = Math.abs(offset);
+        closest = task;
+      }
+    });
+
+    return closest;
   }
 
   autoScrollOnDrag(event) {
@@ -125,12 +128,15 @@ class DragDropManager {
         e.preventDefault();
         const draggingTask = document.querySelector('.dragging');
         if (!draggingTask) return;
+
         const afterElement = this.getDragAfterElement(column, e.clientY);
         this.taskPlaceholder.style.height = `${draggingTask.offsetHeight}px`;
         this.taskPlaceholder.style.width = `${draggingTask.offsetWidth}px`;
+
         document
           .querySelectorAll('.task-placeholder')
           .forEach(el => el.remove());
+
         if (!afterElement) {
           column.appendChild(this.taskPlaceholder);
         } else {

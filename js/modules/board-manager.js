@@ -1,10 +1,10 @@
+import {defaultBoards, defaultTasks} from './constants';
+
 class BoardManager {
   constructor() {
-    this.boards = JSON.parse(localStorage.getItem('boards')) || [
-      {title: 'To Do', color: '#7dd3fc'},
-      {title: 'In Progress', color: '#fde68a'},
-      {title: 'Done', color: '#86efac'},
-    ];
+    const isFirstVisit = !localStorage.getItem('boards');
+
+    this.boards = JSON.parse(localStorage.getItem('boards')) || defaultBoards;
     this.currentBoardIndex = null;
     this.boardsContainer = null;
     this.editBoardModal = null;
@@ -15,10 +15,17 @@ class BoardManager {
     this.cancelEditBoard = null;
     this.clearBoardBtn = null;
 
-    // Store references to managers for later use
     this.uiManager = null;
     this.taskManager = null;
     this.dragDropManager = null;
+
+    if (isFirstVisit) {
+      this.initializeDefaultTasks();
+    }
+  }
+
+  initializeDefaultTasks() {
+    localStorage.setItem('tasks', JSON.stringify(defaultTasks));
   }
 
   saveBoards() {
@@ -33,7 +40,7 @@ class BoardManager {
     }
     const newBoard = {
       title: boardTitle.trim(),
-      color: '#9CA3AF',
+      color: '#d1d5db',
     };
     this.boards.push(newBoard);
     this.saveBoards();
@@ -41,7 +48,6 @@ class BoardManager {
   }
 
   renderBoards(uiManager, taskManager, dragDropManager) {
-    // Store references to managers for later use
     this.uiManager = uiManager;
     this.taskManager = taskManager;
     this.dragDropManager = dragDropManager;
@@ -146,7 +152,6 @@ class BoardManager {
     this.saveBoards();
     this.hideEditBoardModal();
 
-    // Use the stored references instead of undefined variables
     if (this.uiManager && this.taskManager && this.dragDropManager) {
       this.renderBoards(this.uiManager, this.taskManager, this.dragDropManager);
     }
