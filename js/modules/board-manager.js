@@ -2,8 +2,6 @@ import {defaultBoards, defaultTasks} from './constants';
 
 class BoardManager {
   constructor() {
-    const isFirstVisit = !localStorage.getItem('boards');
-
     this.boards = JSON.parse(localStorage.getItem('boards')) || defaultBoards;
     this.currentBoardIndex = null;
     this.boardsContainer = null;
@@ -19,7 +17,8 @@ class BoardManager {
     this.taskManager = null;
     this.dragDropManager = null;
 
-    if (isFirstVisit) {
+    if (!localStorage.getItem('boards')) {
+      this.saveBoards();
       this.initializeDefaultTasks();
     }
   }
