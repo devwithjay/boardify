@@ -14,7 +14,7 @@ class DragDropManager {
 
     taskElement.classList.add('dragging');
 
-    if (e.type === 'touchstart') {
+    if (e.type === 'touchmove') {
       taskElement.dataset.beingDragged = 'true';
     } else {
       e.dataTransfer.setData('text/plain', taskElement.dataset.taskId);
