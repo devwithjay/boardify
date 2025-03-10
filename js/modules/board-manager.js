@@ -58,7 +58,7 @@ class BoardManager {
     this.boards.forEach((board, index) => {
       const boardElement = document.createElement('div');
       boardElement.className =
-        'rounded-lg min-h-[74dvh] md:min-h-[78dvh] overflow-hidden flex flex-col w-[350px] xl:w-[420px] flex-shrink-0';
+        'rounded-lg min-h-[74dvh] md:min-h-[78dvh] overflow-hidden flex flex-col w-[350px] xl:w-[400px] flex-shrink-0';
       boardElement.innerHTML = `
         <div class="my-4">
           <div class="flex justify-between items-center flex-shrink-0 relative">
@@ -89,7 +89,7 @@ class BoardManager {
           </div>
         </div>
         </div>
-        <div class="task-list bg-gray-50 dark:bg-[#202227] flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
+        <div class="task-list bg-gray-50 rounded-lg dark:bg-[#202227] flex-grow p-3 overflow-y-auto space-y-3 h-full" data-index="${index}"></div>
           <div class="bg-gray-50 dark:bg-[#202227] flex-shrink-0 p-4">
             <button class="add-task-btn text-[14px] flex w-full cursor-pointer items-center justify-center gap-2 text-gray-600 transition-opacity duration-200 ease-in-out hover:text-gray-700 dark:text-gray-300 dark:hover:text-gray-200" data-index="${index}">
           <i class="fas fa-plus text-[12px]"></i> Add Task
@@ -102,10 +102,12 @@ class BoardManager {
     const addBoardButton = document.createElement('button');
     addBoardButton.id = 'add-new-board-btn';
     addBoardButton.className =
-      'flex min-w-[360px] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-400 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-[#202227] dark:hover:text-gray-300';
+      'flex min-w-[360px] min-h-[68dvh] mt-16 md:min-h-[72dvh] flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 text-gray-400 transition-colors hover:bg-gray-200 hover:text-gray-400 dark:border-gray-600 dark:text-gray-500 dark:hover:bg-[#202227] dark:hover:text-gray-300';
     addBoardButton.innerHTML = `
-        <i class="fas fa-plus fa-2x mb-2"></i>
-        <span class="font-medium">Add New Board</span>
+        <div>
+          <i class="fas fa-plus mb-2 mr-1"></i>
+          <span class="font-medium">Add Board</span>
+        </div>
     `;
     addBoardButton.addEventListener('click', () => {
       if (this.addNewBoard()) {

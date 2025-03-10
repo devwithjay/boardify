@@ -18,7 +18,10 @@
       content="Boardify is a flexible kanban board application that helps you organize tasks, boost productivity, and streamline your workflow."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://the-boardify.vercel.app/boardify.png" />
+    <meta
+      property="og:image"
+      content="https://the-boardify.vercel.app/boardify.png"
+    />
     <meta property="og:url" content="https://the-boardify.vercel.app/" />
 
     <title>Boardify</title>
@@ -59,14 +62,12 @@
   </head>
 
   <body
-    class="flex min-h-[100dvh] flex-col bg-white font-[Inter] transition-colors duration-300 dark:bg-[#121617]"
+    class="mx-auto flex min-h-[100dvh] max-w-[1440px] flex-col bg-white font-[Inter] transition-colors duration-300 dark:bg-[#121617]"
   >
     <header
-      class="sticky top-0 left-0 z-50 mx-auto w-full max-w-7xl px-6 py-4 backdrop-blur-sm md:px-12"
+      class="sticky top-0 left-0 z-50 w-full px-6 py-4 backdrop-blur-sm md:px-12"
     >
-      <nav
-        class="mx-auto flex max-w-7xl flex-wrap items-center justify-between"
-      >
+      <nav class="mx-auto flex flex-wrap items-center justify-between">
         <div class="flex items-center space-x-3">
           <svg
             class="size-6 text-gray-800 md:size-8 dark:text-white"
@@ -156,7 +157,7 @@
       </nav>
     </header>
 
-    <main class="mx-auto w-full max-w-7xl flex-1 px-6 pt-4 md:px-12 md:pb-2">
+    <main class="w-full flex-1 px-6 pt-4 md:px-12 md:pb-2">
       <section class="relative mb-6 flex items-center space-x-4 sm:hidden">
         <i
           class="fas fa-search absolute left-3 text-xs text-gray-500 dark:text-gray-300"
@@ -447,15 +448,16 @@
                 class="w-full rounded-md border bg-gray-50 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-[#202227] dark:text-white"
               />
             </div>
-            <div class="mb-4">
+            <div class="mb-4 flex items-center gap-4">
               <label
-                class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >Board Color</label
               >
+
               <input
                 id="board-color-input"
                 type="color"
-                class="h-10 w-10 cursor-pointer rounded-md border-0 bg-transparent p-0"
+                class="size-8 cursor-pointer appearance-none rounded-lg border-0 bg-transparent p-0"
               />
             </div>
             <div class="mt-6 flex items-center justify-between">
@@ -488,7 +490,7 @@
     </div>
 
     <footer
-      class="mx-auto flex w-full max-w-7xl items-center justify-between bg-white p-6 md:px-12 dark:bg-[#121617]"
+      class="flex w-full items-center justify-between bg-white p-6 md:px-12 dark:bg-[#121617]"
     >
       <a
         href="https://devwithjay.com"
