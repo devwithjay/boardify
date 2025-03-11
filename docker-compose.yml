@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  boardify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
